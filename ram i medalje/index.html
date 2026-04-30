@@ -331,7 +331,6 @@
     transition:color 0.3s;
   }
   .step:hover .step-num { color:var(--gold); }
-  .step-body {}
   .step-title { font-size:1.25rem; margin-bottom:0.6rem; }
   .step-desc { font-family:sans-serif; font-size:0.9rem; color:var(--gray-light); line-height:1.8; max-width:500px; }
   .step-tag {
@@ -576,7 +575,6 @@
     margin: 0 auto;
     align-items: start;
   }
-  .order-left {}
   .order-left .section-title { margin-bottom: 1rem; }
   .order-promise {
     display: flex; flex-direction: column; gap: 1.2rem;
@@ -616,6 +614,7 @@
     transition: border-color 0.25s;
     width: 100%;
     -webkit-appearance: none;
+    appearance: none;
     border-radius: 0;
   }
   .form-input::placeholder, .form-textarea::placeholder { color: var(--gray); }
@@ -664,36 +663,79 @@
     border-top:1px solid rgba(201,168,76,0.12);
     position:relative; overflow:hidden;
   }
-  .cta-section::before {
+    .cta-section::before {
     content:''; position:absolute; inset:0;
-    background:
-      radial-gradient(ellipse 60% 70% at 50% 50%, rgba(20,60,160,0.12), transparent 70%),
-      radial-gradient(ellipse 30% 40% at 50% 50%, rgba(201,168,76,0.05), transparent);
+    background: radial-gradient(circle at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 50%);
   }
+
+  .order-section::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(circle at 80% 50%, rgba(201,168,76,0.05) 0%, transparent 50%);
+  }
+
   .cta-section * { position:relative; }
   .cta-section .section-title { max-width:700px; margin:0 auto 1.5rem; }
   .cta-section .section-sub { max-width:480px; margin:0 auto 3rem; text-align:center; }
 
-  /* FOOTER */
-  footer {
-    background: linear-gradient(180deg, var(--dark-2) 0%, var(--black) 100%);
-    padding:4rem 4rem 2rem;
-    border-top:1px solid rgba(201,168,76,0.12);
-  }
+  /* FOOTER STYLES */
   .footer-top {
-    display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:4rem; padding-bottom:3rem;
-    border-bottom:1px solid rgba(255,255,255,0.05);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
   }
-  .footer-brand {}
-  .footer-logo { font-size:1.1rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); font-family:sans-serif; font-weight:300; }
-  .footer-tagline { font-family:sans-serif; font-size:0.82rem; color:var(--gray); margin-top:1rem; line-height:1.7; max-width:260px; }
-  .footer-col h4 { font-family:sans-serif; font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gray); margin-bottom:1.2rem; }
-  .footer-links { list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
-  .footer-links a { font-family:sans-serif; font-size:0.83rem; color:rgba(245,243,238,0.5); text-decoration:none; transition:color 0.3s; }
-  .footer-links a:hover { color:var(--gold); }
+  .footer-logo { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.8rem; color: var(--white); }
+  .footer-tagline { font-size: 0.85rem; color: var(--gray-light); line-height: 1.6; margin-bottom: 1.5rem; }
+  .footer-social { display: flex; gap: 1rem; }
+  .footer-social a {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gray-light);
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .footer-social a:hover { border-color: var(--gold); color: var(--gold); }
+  .footer-col h4 { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 0.7rem; }
+  .footer-links a { color: var(--gray-light); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--white); }
   .footer-bottom {
-    padding-top:2rem; display:flex; justify-content:space-between; align-items:center;
-    font-family:sans-serif; font-size:0.75rem; color:rgba(245,243,238,0.25);
+    border-top: 1px solid rgba(201,168,76,0.1);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+  .wa-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 99;
+    transition: all 0.3s;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+  }
+  .wa-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(37,211,102,0.4); }
+  .wa-btn svg { width: 28px; height: 28px; fill: white; }
+
+  /* RESPONSIVE FOOTER */
+  @media(max-width:1024px) {
+    .footer-top { grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2rem; }
+  }
+  @media(max-width:768px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
   }
 
   /* ── Tablet (1024px) ─────────────────────────── */
@@ -783,6 +825,393 @@
     .footer-top { grid-template-columns:1fr; gap:2rem; }
     .footer-bottom { flex-direction:column; gap:0.5rem; text-align:center; font-size:0.75rem; }
   }
+
+  /* ── Small mobile (480px) ────────────────────── */
+  @media(max-width:480px) {
+    .hero h1 { font-size: 2.2rem; }
+    .section-title { font-size:1.6rem; }
+    .frame-card { width:210px; min-width:210px; }
+    .frame-card-visual { height:180px; }
+    .frame-card-medal { font-size:2rem; }
+    .testimonial-card { padding:1.25rem; }
+    .testimonial-text { font-size:0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-logo sans">Medalje<span> u Ramu</span></div>
+  <ul class="nav-links">
+    <li><a href="#kako-radi">Kako radi</a></li>
+    <li><a href="builder.html">Builder</a></li>
+    <li><a href="#galerija">Galerija</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <a href="builder.html" class="nav-cta sans">Kreiraj ram</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-corners">
+    <div class="hero-corner hc-tl"></div>
+    <div class="hero-corner hc-tr"></div>
+    <div class="hero-corner hc-bl"></div>
+    <div class="hero-corner hc-br"></div>
+  </div>
+
+  <div class="hero-content">
+
+    <h1>Dostignuće<br>koje <em>traje</em></h1>
+
+    <div class="hero-divider"></div>
+
+    <p class="hero-sub sans">
+      Personalizovani ramovi koji čuvaju tvoje sportske uspomene zauvek. Svaka medalja ima svoju priču — daj joj pravo mesto.
+    </p>
+
+    <div class="hero-actions">
+      <a href="builder.html" class="btn-primary sans">Kreiraj ram →</a>
+      <span class="hero-separator">ili</span>
+      <a href="#galerija" class="btn-ghost sans">
+        Pogledaj galeriju
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="hero-stats-row">
+      <div class="hero-stat-block">
+        <span class="hero-stat-value">2.400+</span>
+        <span class="hero-stat-label sans">Ramova</span>
+      </div>
+      <div class="hero-stat-block">
+        <span class="hero-stat-value">4.9★</span>
+        <span class="hero-stat-label sans">Ocena kupaca</span>
+      </div>
+      <div class="hero-stat-block">
+        <span class="hero-stat-value">100%</span>
+        <span class="hero-stat-label sans">Zadovoljnih</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Beogradski Maraton</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Novi Sad Polumaraton</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Triatlonci</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Plesni Klubovi</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Sportske Medalje</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Školska Takmičenja</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Crossfit</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Korporativni Pokloni</span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Beogradski Maraton</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Novi Sad Polumaraton</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Triatlonci</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Plesni Klubovi</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Sportske Medalje</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Školska Takmičenja</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Crossfit</span>
+    <span class="marquee-item sans"><span class="marquee-dot">◆</span> Korporativni Pokloni</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-section" id="kako-radi">
+  <span class="section-label sans">Zašto mi</span>
+  <h2 class="section-title">Više od <em>običnog rama</em></h2>
+  <p class="section-sub sans">Svaki ram je ručno proveren, personalizovan do detalja i pažljivo upakovan pre isporuke.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon sans">⊞</div>
+      <h3 class="feature-title">Live preview builder</h3>
+      <p class="feature-desc sans">Vidiš tačno šta dobijаš pre narudžbine. Menjaj boje, tekst, raspored u realnom vremenu i naruči sa potpunom sigurnošću.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon sans">✦</div>
+      <h3 class="feature-title">Premium materijali</h3>
+      <p class="feature-desc sans">Drvo, metal, minimalistički okvir — svaki ram je izgrađen da traje decenije. UV print, mat laminacija, tekstura po izboru.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon sans">◎</div>
+      <h3 class="feature-title">Više medalja</h3>
+      <p class="feature-desc sans">Skupio si celu kolekciju? Kreiraj ram za više medalja i prikaži celu svoju priču — od prve do poslednje — na jednom mestu.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon sans">▣</div>
+      <h3 class="feature-title">Tvoja fotografija</h3>
+      <p class="feature-desc sans">Upload slike sa trke, takmičenja ili ceremone dodele. Fotografija postaje centralni element rama — onako kako ti zamišljaš.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon sans">↺</div>
+      <h3 class="feature-title">Besplatna korektura</h3>
+      <p class="feature-desc sans">Nisi 100% zadovoljan pre štampe? Bez brige — radimo korekciju besplatno dok ne bude tačno onako kako si zamišljao.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon sans">◇</div>
+      <h3 class="feature-title">Savršen poklon</h3>
+      <p class="feature-desc sans">Poklon sa smislom. Za trkača, plesača, sportiste u tvom životu — nešto što će stajati na zidu i podsećati na svaki napor.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS / STEPS -->
+<section class="how-section">
+  <span class="section-label sans">Proces</span>
+  <h2 class="section-title">Tri koraka do<br><em>savršenog rama</em></h2>
+
+  <div class="steps-container">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <h3 class="step-title">Izaberi tip i format</h3>
+        <p class="step-desc sans">Vertikalni ili horizontalni, jedna medalja ili više. Izaberi materijal okvira — tamno drvo, beli, crni minimalistički, ili zlatni akcenat.</p>
+        <span class="step-tag sans">Personalizacija</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <h3 class="step-title">Dodaj tekst, sliku i dizajn</h3>
+        <p class="step-desc sans">Ime, datum, rezultat i tvoja fotografija sa događaja. Izaberi pozadinu — jednobojna, gradientna, teksturisana — i dodaj lični pečat svakom detalju.</p>
+        <span class="step-tag sans">Builder</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <h3 class="step-title">Naruči i budi ponosan</h3>
+        <p class="step-desc sans">Pošaljemo ti prilagođeni dizajn na pregled. Kada dobiješ, znaj da je tvoj ram spreman za izložbu. Bepl dostava u Srbiji, štampa za 5-7 dana.</p>
+        <span class="step-tag sans">Isporuka</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HORIZONTAL SCROLL FRAMED MEDALS GALLERY -->
+<section id="galerija" class="hscroll-section">
+  <div class="hscroll-inner">
+    <div class="hscroll-header">
+      <div>
+        <span class="section-label sans">Galerija</span>
+        <h2 class="section-title">Naši <em>najlepši</em> ramovi</h2>
+      </div>
+      <span class="hscroll-hint sans">Klizni horizontalno →</span>
+    </div>
+  </div>
+
+  <div class="hscroll-track-wrap">
+    <div class="hscroll-fade-left"></div>
+    <div class="hscroll-track">
+
+      <!-- Card 1: Gold / Marathon -->
+      <div class="frame-card">
+        <div class="frame-card-visual" style="background:rgba(8,8,8,0.9); border:3px solid #C9A84C;">
+          <div class="frame-card-medal">
+            🏃
+            <div class="frame-card-ribbon" style="background:linear-gradient(#C9A84C,#8B6914);"></div>
+          </div>
+          <div class="frame-card-name" style="color:#EDE9E0;">Marko Marković</div>
+          <div class="frame-card-event">Beogradski Maraton 2024</div>
+          <div class="frame-card-time" style="color:#999;">42,195 km</div>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Zlatni · A4</div>
+          <div class="frame-card-style sans">Marathon Gold</div>
+          <div class="frame-card-price sans">od 3.490 RSD</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Black -->
+      <div class="frame-card">
+        <div class="frame-card-visual" style="background:#000; border:3px solid #333;">
+          <div class="frame-card-medal">
+            🎖️
+            <div class="frame-card-ribbon" style="background:linear-gradient(#E8C97A,#C9A84C);"></div>
+          </div>
+          <div class="frame-card-name" style="color:#EDE9E0;">Ana Anić</div>
+          <div class="frame-card-event">Državno Prvenstvo</div>
+          <div class="frame-card-time" style="color:#888;">Zlato 2024</div>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Crni · A4</div>
+          <div class="frame-card-style sans">Victory Black</div>
+          <div class="frame-card-price sans">od 2.990 RSD</div>
+        </div>
+      </div>
+
+      <!-- Card 3: White -->
+      <div class="frame-card">
+        <div class="frame-card-visual" style="background:#F8F5EF; border:3px solid #d0ccc4; color:#222;">
+          <div class="frame-card-medal">
+            ⛳
+            <div class="frame-card-ribbon" style="background:linear-gradient(#D2B48C,#A0826D);"></div>
+          </div>
+          <div class="frame-card-name" style="color:#333;">Dragan Dragic</div>
+          <div class="frame-card-event">Open Championship</div>
+          <div class="frame-card-time" style="color:#666;">Tournament Winner</div>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Beli · A4</div>
+          <div class="frame-card-style sans">Elegant White</div>
+          <div class="frame-card-price sans">od 3.200 RSD</div>
+        </div>
+      </div>
+
+      <!-- Card 4: Wood -->
+      <div class="frame-card">
+        <div class="frame-card-visual" style="background:#5D3A1F; border:3px solid #3d2410;">
+          <div class="frame-card-medal">
+            🥇
+            <div class="frame-card-ribbon" style="background:linear-gradient(#C9A84C,#8B6914);"></div>
+          </div>
+          <div class="frame-card-name" style="color:#EDE9E0;">Jelena Jovanović</div>
+          <div class="frame-card-event">Svetski Kupo</div>
+          <div class="frame-card-time" style="color:#c9a84c;">Platinum Star</div>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Zlatni · A4</div>
+          <div class="frame-card-style sans">Triatlon Premium</div>
+          <div class="frame-card-price sans">od 3.490 RSD</div>
+        </div>
+      </div>
+
+      <!-- Card 5: Navy / School -->
+      <div class="frame-card">
+        <div class="frame-card-visual" style="background:#0c1820; border:3px solid #18304e;">
+          <div class="frame-card-medal">
+            🏆
+            <div class="frame-card-ribbon" style="background:linear-gradient(#C9A84C,#8B6914);"></div>
+          </div>
+          <div class="frame-card-name" style="color:#F5F3EE;">Marija Đurić</div>
+          <div class="frame-card-event">Državno Takmičenje</div>
+          <div class="frame-card-time" style="color:#888;">Zlatna medalja</div>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Mornarički · A4</div>
+          <div class="frame-card-style sans">Školsko Dostignuće</div>
+          <div class="frame-card-price sans">od 2.990 RSD</div>
+        </div>
+      </div>
+
+      <!-- Card 6: Silver/Antracit / Plivanje -->
+      <div class="frame-card">
+        <div class="frame-card-visual" style="background:#1a1a1a; border:3px solid #b0aea8;">
+          <div class="frame-card-medal">
+            🏊
+            <div class="frame-card-ribbon" style="background:linear-gradient(#b0aea8,#777);"></div>
+          </div>
+          <div class="frame-card-name" style="color:#F5F3EE;">Igor Stefanović</div>
+          <div class="frame-card-event">Plivanje 100m Slobodno</div>
+          <div class="frame-card-time" style="color:#888;">58.20s</div>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Srebrni · A3</div>
+          <div class="frame-card-style sans">Aqua Sport</div>
+          <div class="frame-card-price sans">od 3.200 RSD</div>
+        </div>
+      </div>
+
+      <!-- Card 7: 3 medals / Multi -->
+      <div class="frame-card" style="width:340px;">
+        <div class="frame-card-visual" style="background:#0e1e10; border:3px solid #1c4826; flex-direction:row; gap:1.2rem; padding:1.2rem;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+            <div style="font-size:1.8rem;">🥇</div>
+            <div style="font-size:1.8rem;">🥈</div>
+            <div style="font-size:1.8rem;">🥉</div>
+          </div>
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:0.4rem;">
+            <div class="frame-card-name" style="color:#F5F3EE;font-size:0.8rem;text-align:left;">Team Spark</div>
+            <div class="frame-card-event" style="text-align:left;">Sezona 2023 · 2024 · 2025</div>
+            <div style="font-family:sans-serif;font-size:0.7rem;color:#555;margin-top:0.3rem;">3 medalje · Pano 40×20</div>
+          </div>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Zeleni · Pano</div>
+          <div class="frame-card-style sans">Multi-medalja Kolekcija</div>
+          <div class="frame-card-price sans">od 4.990 RSD</div>
+        </div>
+      </div>
+
+      <!-- Card 8: CTA card -->
+      <div class="frame-card" style="width:260px;">
+        <div class="frame-card-visual" style="background:rgba(201,168,76,0.04); border:1px dashed rgba(201,168,76,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem;">
+          <div style="width:60px;height:60px;border:1px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--gold);">+</div>
+          <div style="text-align:center;">
+            <div style="font-family:sans-serif;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Napravi svoj</div>
+            <div style="font-family:Georgia,serif;font-size:1rem;color:var(--white);">Kreiraj <em style="color:var(--gold);">jedinstveni</em> ram</div>
+          </div>
+          <a href="builder.html" class="btn-primary sans" style="font-size:0.72rem;padding:0.7rem 1.5rem;">Otvori Builder →</a>
+        </div>
+        <div class="frame-card-meta">
+          <div class="frame-card-label sans">Tvoj dizajn</div>
+          <div class="frame-card-style sans">Potpuno personalizovano</div>
+          <div class="frame-card-price sans">od 2.990 RSD</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="hscroll-fade-right">
+      <button class="scroll-arrow sans" onclick="scrollTrack(1)" aria-label="Skroluj desno">→</button>
+    </div>
+  </div>
+</section>
+
+    /* Marquee */
+    .marquee-wrap { padding:1.2rem 0; }
+
+    /* Features */
+    .features-grid { grid-template-columns:1fr; gap:1rem; }
+    .feature-card { padding:1.5rem; }
+
+    /* Steps */
+    .steps-container { gap:0; }
+    .step { flex-direction:column; gap:0.5rem; padding:1.5rem 0; }
+    .step-num { font-size:2rem; }
+    .step-desc { max-width:100%; }
+
+    /* Horizontal scroll cards */
+    .hscroll-track { gap:1rem; }
+    .frame-card { width:240px; min-width:240px; }
+    .frame-card-visual { height:200px; }
+    .hscroll-track-wrap { margin:0 -1.25rem; }
+
+    /* Map section */
+    .map-section { padding:3rem 1.25rem; gap:2rem; }
+    .map-visual { border-radius:12px; }
+    .map-svg { height:220px; }
+
+    /* Gallery */
+    .gallery-grid { grid-template-columns:1fr; gap:0.75rem; }
+    .gallery-item { height:180px; }
+
+    /* Testimonials */
+    .testimonials-grid { grid-template-columns:1fr; gap:1rem; }
+    .testimonial-card { padding:1.5rem; }
+
+    /* Order form */
+    .order-section { padding: 4rem 1.25rem; }
+    .order-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .order-form { padding: 1.8rem 1.25rem; }
+
+    /* CTA section */
+    .cta-section { padding:4rem 1.25rem; text-align:center; }
+
+    /* Footer */
+    .footer-top { grid-template-columns:1fr; gap:2rem; }
+    .footer-bottom { flex-direction:column; gap:0.5rem; text-align:center; font-size:0.75rem; }
+  
 
   /* ── Small mobile (480px) ────────────────────── */
   @media(max-width:480px) {
@@ -1684,5 +2113,73 @@ function scrollTrack(dir) {
   }
 })();
 </script>
+
+<!-- FOOTER -->
+<footer style="background: var(--dark); padding: 4rem; border-top: 1px solid rgba(201,168,76,0.1);">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo sans">Medalje u Ramu</div>
+      <p class="footer-tagline sans">Personalizovani ramovi za sve tvoje medalje i sportska dostignuća. Napravljeno u Srbiji.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/medaljeuram" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://facebook.com/medaljeuram" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </a>
+        <a href="https://tiktok.com/@medaljeuram" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.73a8.16 8.16 0 0 0 4.77 1.52V6.8a4.85 4.85 0 0 1-1-.11z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="sans">Proizvod</h4>
+      <ul class="footer-links">
+        <li><a href="builder.html">Builder</a></li>
+        <li><a href="#galerija">Galerija</a></li>
+        <li><a href="#cene">Cene</a></li>
+        <li><a href="#">Poklon kartice</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="sans">Kompanija</h4>
+      <ul class="footer-links">
+        <li><a href="#">O nama</a></li>
+        <li><a href="#">Saradnja</a></li>
+        <li><a href="#">Plesni klubovi</a></li>
+        <li><a href="#">Korporativno</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="sans">Podrška</h4>
+      <ul class="footer-links">
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+        <li><a href="#">Dostava</a></li>
+        <li><a href="#">Povraćaj</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Medalje u Ramu. Sva prava zadržana.</span>
+    <span>Napravljeno sa ♥ u Srbiji</span>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a class="wa-btn" href="https://wa.me/381644183252?text=Zdravo!%20Zanima%20me%20personalizovani%20ram%20za%20medalje." target="_blank" rel="noopener" aria-label="Kontaktirajte nas na WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
 </body>
 </html>
