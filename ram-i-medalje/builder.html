@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MedalFrame Builder — Medalje u Ramu</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Great+Vibes&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -150,7 +150,7 @@ body{background:var(--dark);color:var(--t1);display:flex;flex-direction:column;h
 /* Addon list */
 .adl{display:flex;flex-direction:column;gap:4px;}
 .adi{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;
-  border:1px solid var(--bd);background:var(--s3);cursor:grab;transition:.14s;user-select:none;}
+  border:1px solid var(--bd);background:var(--s3);cursor:grab;transition:.14s;user-select:none;touch-action:none;}
 .adi:hover{border-color:var(--gbd);background:var(--gbg);}
 .adi:hover .addrg{color:var(--gold);}
 .adic{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.05);
@@ -397,6 +397,11 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
       <div class="chip"    onclick="setSize('PAN',this)">Pano <sub>40×20</sub></div>
       <div class="chip"    onclick="setSize('TALL',this)">Uski <sub>20×50</sub></div>
     </div>
+    <div class="sl" style="margin-top:10px;">Orijentacija</div>
+    <div class="chips" id="or-c">
+      <div class="chip on" onclick="setOrient('portrait',this)">↕ Vertikalno</div>
+      <div class="chip"    onclick="setOrient('landscape',this)">↔ Horizontalno</div>
+    </div>
   </div>
 
   <div class="sdv"></div>
@@ -527,25 +532,25 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
   <div class="sec" id="s-addons" style="padding-bottom:20px;">
     <div class="sl">Dodaci — prevuci na ram</div>
     <div class="adl">
-      <div class="adi" draggable="true" ondragstart="ds(event,'image')">
+      <div class="adi" data-type="image">
         <div class="adic">🖼️</div><div class="adinf"><div class="adnm">Fotografija</div><div class="adsb">Slika sa događaja</div></div><div class="addrg">⠿</div>
       </div>
-      <div class="adi" draggable="true" ondragstart="ds(event,'name')">
+      <div class="adi" data-type="name">
         <div class="adic">👤</div><div class="adinf"><div class="adnm">Ime i prezime</div><div class="adsb">Personalizovano</div></div><div class="addrg">⠿</div>
       </div>
-      <div class="adi" draggable="true" ondragstart="ds(event,'number')">
+      <div class="adi" data-type="number">
         <div class="adic">🔢</div><div class="adinf"><div class="adnm">Broj / Rezultat</div><div class="adsb">Vreme, plasman</div></div><div class="addrg">⠿</div>
       </div>
-      <div class="adi" draggable="true" ondragstart="ds(event,'event')">
+      <div class="adi" data-type="event">
         <div class="adic">📅</div><div class="adinf"><div class="adnm">Event / Datum</div><div class="adsb">Naziv takmičenja</div></div><div class="addrg">⠿</div>
       </div>
-      <div class="adi" draggable="true" ondragstart="ds(event,'sentence')">
+      <div class="adi" data-type="sentence">
         <div class="adic">✍️</div><div class="adinf"><div class="adnm">Rečenica / citat</div><div class="adsb">Motivacioni tekst</div></div><div class="addrg">⠿</div>
       </div>
-      <div class="adi" draggable="true" ondragstart="ds(event,'players')">
+      <div class="adi" data-type="players">
         <div class="adic">👥</div><div class="adinf"><div class="adnm">Tim / Saigrači</div><div class="adsb">Lista igrača</div></div><div class="addrg">⠿</div>
       </div>
-      <div class="adi" draggable="true" ondragstart="ds(event,'divider')">
+      <div class="adi" data-type="divider">
         <div class="adic">➖</div><div class="adinf"><div class="adnm">Separator</div><div class="adsb">Dekorativna linija</div></div><div class="addrg">⠿</div>
       </div>
     </div>
@@ -596,6 +601,7 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
       <input type="hidden" name="form-name" value="narudzbina">
       <input type="hidden" name="bot-field" value="">
       <input type="hidden" id="orderData" name="order_data" value="">
+      <input type="hidden" id="orderSvg" name="order_svg" value="">
       <div class="omt">📦 Narudžbenica</div>
       <div class="omf">
         <label for="oname">Ime i prezime *</label>
@@ -626,7 +632,7 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
 
 <script>
 const G={
-  size:'A4', fc:'#111111', fw:14,
+  size:'A4', orient:'portrait', fc:'#111111', fw:14,
   bgc:'#ffffff', bgp:'none',
   msh:'circle', mcm:7, mct:1,
   ppc:40,
@@ -658,6 +664,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   buildFrame();
   pm(1);
   usm();
+  setupAddonDrags();
   document.addEventListener('mousemove',onMM);
   document.addEventListener('mouseup',onMU);
   let rt;
@@ -681,8 +688,12 @@ window.addEventListener('DOMContentLoaded',()=>{
   },60);});
 });
 
-function buildFrame(){
+function szDims(){
   const sz=SZ[G.size];
+  return G.orient==='landscape'?{w:sz.h,h:sz.w}:{w:sz.w,h:sz.h};
+}
+function buildFrame(){
+  const sz=szDims();
   const fw=G.fw;
   const wrap=document.getElementById('cw');
   const aw=wrap.clientWidth-24;
@@ -712,15 +723,17 @@ function buildFrame(){
 
 function applyBg(canvas){
   const P={
-    none:'',
-    lines:'repeating-linear-gradient(0deg,transparent 0,transparent 18px,rgba(0,0,0,.09) 18px,rgba(0,0,0,.09) 19px)',
-    dots:'radial-gradient(circle,rgba(0,0,0,.2) 1.3px,transparent 1.3px) 0 0/13px 13px',
-    grid:'linear-gradient(rgba(0,0,0,.09) 1px,transparent 1px) 0 0/18px 18px,linear-gradient(90deg,rgba(0,0,0,.09) 1px,transparent 1px) 0 0/18px 18px',
-    diag:'repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(0,0,0,.08) 8px,rgba(0,0,0,.08) 9px)',
-    hatch:'repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(0,0,0,.08) 5px,rgba(0,0,0,.08) 6px),repeating-linear-gradient(-45deg,transparent,transparent 5px,rgba(0,0,0,.08) 5px,rgba(0,0,0,.08) 6px)',
+    none:  {img:'none', sz:'auto'},
+    lines: {img:'repeating-linear-gradient(0deg,transparent 0,transparent 18px,rgba(0,0,0,.09) 18px,rgba(0,0,0,.09) 19px)', sz:'auto'},
+    dots:  {img:'radial-gradient(circle,rgba(0,0,0,.2) 1.3px,transparent 1.3px)', sz:'13px 13px'},
+    grid:  {img:'linear-gradient(rgba(0,0,0,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.09) 1px,transparent 1px)', sz:'18px 18px'},
+    diag:  {img:'repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(0,0,0,.08) 8px,rgba(0,0,0,.08) 9px)', sz:'auto'},
+    hatch: {img:'repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(0,0,0,.08) 5px,rgba(0,0,0,.08) 6px),repeating-linear-gradient(-45deg,transparent,transparent 5px,rgba(0,0,0,.08) 5px,rgba(0,0,0,.08) 6px)', sz:'auto'},
   };
+  const p=P[G.bgp]||P.none;
   canvas.style.backgroundColor=G.bgc;
-  canvas.style.backgroundImage=P[G.bgp]||'none';
+  canvas.style.backgroundImage=p.img;
+  canvas.style.backgroundSize=p.sz;
 }
 
 function buildGov(w,h){
@@ -737,6 +750,23 @@ function setSize(sz,btn){
   btn.classList.add('on');
   buildFrame();usm();toast(SZ[sz].lbl);
 }
+function setOrient(o,btn){
+  if(G.orient===o)return;
+  const pw=fc().offsetWidth,ph=fc().offsetHeight;
+  G.orient=o;
+  document.querySelectorAll('#or-c .chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  buildFrame();
+  const nw=fc().offsetWidth,nh=fc().offsetHeight;
+  if(pw&&ph){
+    const sx=nw/pw,sy=nh/ph;
+    G.els.forEach(el=>{
+      el.x=Math.round(el.x*sx);el.y=Math.round(el.y*sy);
+      const w=bid(el.id);if(w){w.style.left=el.x+'px';w.style.top=el.y+'px';}
+    });
+  }
+  usm();toast(o==='landscape'?'Horizontalno':'Vertikalno');
+}
 function setFW(v){
   G.fw=v;
   document.getElementById('fw-v').textContent=v+'px';
@@ -745,7 +775,7 @@ function setFW(v){
   const ow=frm.offsetWidth,oh=frm.offsetHeight;
   const cw=ow-v*2,ch=oh-v*2;
   const cv=fc();cv.style.width=cw+'px';cv.style.height=ch+'px';
-  G.ppc=cw/(SZ[G.size].w/10);
+  G.ppc=cw/(szDims().w/10);
   applyBg(cv);
 }
 function setFC(c,btn){
@@ -810,16 +840,7 @@ function pm(n){
 function setBgC(c,btn){G.bgc=c;document.querySelectorAll('#bg-s .sw').forEach(s=>s.classList.remove('on'));if(btn)btn.classList.add('on');applyBg(fc());}
 function setBgP(p,btn){G.bgp=p;document.querySelectorAll('#pt-g .ptb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');applyBg(fc());}
 
-function ds(e,type){G.dtyp=type;e.dataTransfer.setData('text/plain',type);e.dataTransfer.effectAllowed='copy';}
-function onDrop(e){
-  e.preventDefault();e.stopPropagation();
-  const type=e.dataTransfer.getData('text/plain')||G.dtyp;
-  if(!type)return;
-  const canvas=fc();
-  const rect=canvas.getBoundingClientRect();
-  const x=Math.max(0,e.clientX-rect.left-70);
-  const y=Math.max(0,e.clientY-rect.top-16);
-  const cw=canvas.offsetWidth,ch=canvas.offsetHeight;
+function addonDef(type,cw,ch){
   const D={
     image:   {w:Math.round(cw*.42),h:Math.round(ch*.27)},
     name:    {w:180,h:30,txt:'Ime Prezime',      fs:20,ff:'Instrument Serif',tc:'#111',al:'center'},
@@ -829,8 +850,64 @@ function onDrop(e){
     players: {w:130,h:80,txt:'Ana J.\nMarko P.\nStefan R.',fs:11,ff:'Manrope',tc:'#333',al:'left'},
     divider: {w:160,h:2, dc:'#c9a84c'},
   };
-  addEl({type,x,y,...D[type]});
+  return D[type]||{};
+}
+function onDrop(e){
+  e.preventDefault();e.stopPropagation();
+  const type=e.dataTransfer.getData('text/plain')||G.dtyp;
+  if(!type)return;
+  const canvas=fc();
+  const rect=canvas.getBoundingClientRect();
+  const x=Math.max(0,e.clientX-rect.left-70);
+  const y=Math.max(0,e.clientY-rect.top-16);
+  addEl({type,x,y,...addonDef(type,canvas.offsetWidth,canvas.offsetHeight)});
   showG();usm();G.dtyp=null;
+}
+function setupAddonDrags(){
+  let drag=null;
+  const onMove=e=>{
+    if(!drag)return;
+    drag.ghost.style.left=(e.clientX-drag.offX)+'px';
+    drag.ghost.style.top=(e.clientY-drag.offY)+'px';
+  };
+  const onUp=e=>{
+    if(!drag)return;
+    const {ghost,type,offX,offY}=drag;
+    drag=null;
+    ghost.remove();
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onUp);
+    const cwEl=document.getElementById('cw');
+    const cr=cwEl.getBoundingClientRect();
+    if(e.clientX>=cr.left&&e.clientX<=cr.right&&e.clientY>=cr.top&&e.clientY<=cr.bottom){
+      const canvas=fc();
+      const fr=canvas.getBoundingClientRect();
+      const x=Math.max(0,e.clientX-fr.left-70);
+      const y=Math.max(0,e.clientY-fr.top-16);
+      addEl({type,x,y,...addonDef(type,canvas.offsetWidth,canvas.offsetHeight)});
+      showG();usm();
+    }
+  };
+  document.querySelectorAll('.adi').forEach(adi=>{
+    const type=adi.dataset.type;
+    adi.addEventListener('mousedown',e=>{
+      if(e.button!==0)return;
+      const rect=adi.getBoundingClientRect();
+      const offX=e.clientX-rect.left;
+      const offY=e.clientY-rect.top;
+      const ghost=adi.cloneNode(true);
+      Object.assign(ghost.style,{
+        position:'fixed',left:rect.left+'px',top:rect.top+'px',
+        width:adi.offsetWidth+'px',opacity:'0.88',pointerEvents:'none',
+        zIndex:'9999',margin:'0',boxShadow:'0 8px 24px rgba(0,0,0,.5)'
+      });
+      document.body.appendChild(ghost);
+      drag={ghost,type,offX,offY};
+      document.addEventListener('mousemove',onMove);
+      document.addEventListener('mouseup',onUp);
+      e.preventDefault();
+    });
+  });
 }
 
 function addEl(opts){
@@ -875,11 +952,17 @@ function relEl(el){
   else if(['name','number','event','sentence','players'].includes(el.type)){
     const te=document.createElement('div');
     te.className='tel';te.contentEditable='true';
-    te.style.cssText=`width:100%;min-height:${el.h}px;font-size:${el.fs||14}px;color:${el.tc||'#111'};font-family:'${el.ff||'Manrope'}',serif,sans-serif;text-align:${el.al||'center'};white-space:pre-wrap;`;
+    te.style.cssText=`width:100%;min-height:${el.h}px;font-size:${el.fs||14}px;font-weight:${el.fb||'normal'};font-style:${el.fi||'normal'};color:${el.tc||'#111'};font-family:'${el.ff||'Manrope'}',serif,sans-serif;text-align:${el.al||'center'};white-space:pre-wrap;pointer-events:none;`;
     te.textContent=el.txt||'';
-    te.onclick=e=>e.stopPropagation();
     te.oninput=()=>{el.txt=te.textContent;};
     wrap.appendChild(te);arh(wrap,el);
+    wrap.addEventListener('dblclick',e=>{
+      e.stopPropagation();
+      te.style.pointerEvents='auto';
+      te.focus();
+    });
+    te.addEventListener('blur',()=>{te.style.pointerEvents='none';});
+    te.addEventListener('click',e=>e.stopPropagation());
   }
   else if(el.type==='divider'){
     wrap.style.height=(el.h||2)+'px';
@@ -909,7 +992,7 @@ function arh(wrap,el){
 function onEMD(e){
   if(e.target.classList.contains('rh'))return;
   if(e.target.closest('.cctrl'))return;
-  if(e.target.contentEditable==='true')return;
+  if(e.target.contentEditable==='true'&&e.target.style.pointerEvents==='auto')return;
   const w=e.currentTarget;
   G.movId=w.dataset.id;G.mox=e.clientX-w.offsetLeft;G.moy=e.clientY-w.offsetTop;
   selEl(G.movId);showG();e.preventDefault();
@@ -993,10 +1076,18 @@ function rprops(el){
     h+=`<div class="rl">Tekst</div>
     <textarea class="pi" oninput="utxt('${el.id}',this.value)">${el.txt||''}</textarea>
     <div class="rl">Font</div>
-    <div class="fr">
+    <div class="fr" style="flex-wrap:wrap;">
       <div class="fo ${(el.ff||'').includes('Instrument')?'on':''}" onclick="uprop('${el.id}','ff','Instrument Serif');acf(this)" style="font-family:'Instrument Serif',serif;">Serif</div>
+      <div class="fo ${(el.ff||'').includes('Playfair')?'on':''}" onclick="uprop('${el.id}','ff','Playfair Display');acf(this)" style="font-family:'Playfair Display',serif;">Playfair</div>
+      <div class="fo ${(el.ff||'').includes('Vibes')?'on':''}" onclick="uprop('${el.id}','ff','Great Vibes');acf(this)" style="font-family:'Great Vibes',cursive;font-size:13px;">Script</div>
       <div class="fo ${(el.ff||'').includes('Manrope')?'on':''}" onclick="uprop('${el.id}','ff','Manrope');acf(this)">Sans</div>
+      <div class="fo ${(el.ff||'').includes('Oswald')?'on':''}" onclick="uprop('${el.id}','ff','Oswald');acf(this)" style="font-family:'Oswald',sans-serif;letter-spacing:.04em;">Oswald</div>
       <div class="fo ${(el.ff||'').includes('Courier')?'on':''}" onclick="uprop('${el.id}','ff','Courier New');acf(this)" style="font-family:'Courier New';">Mono</div>
+    </div>
+    <div class="rl" style="margin-top:8px;">Stil</div>
+    <div class="fr">
+      <div class="fo ${(el.fb||'normal')==='bold'?'on':''}" onclick="utgl('${el.id}','fb','bold','normal',this)" style="font-weight:800;min-width:36px;">B</div>
+      <div class="fo ${(el.fi||'normal')==='italic'?'on':''}" onclick="utgl('${el.id}','fi','italic','normal',this)" style="font-style:italic;min-width:36px;">I</div>
     </div>
     <div class="rl">Veličina</div>
     <div class="slm"><label>px</label><input type="range" min="8" max="60" value="${el.fs||14}" oninput="uprop('${el.id}','fs',+this.value);this.nextSibling.textContent=this.value+'px'"><span>${el.fs||14}px</span></div>
@@ -1033,6 +1124,14 @@ function uprop(id,prop,val){
   if(prop==='fs')te.style.fontSize=val+'px';
   if(prop==='tc')te.style.color=val;
   if(prop==='ff')te.style.fontFamily=`'${val}',serif,sans-serif`;
+  if(prop==='fb')te.style.fontWeight=val;
+  if(prop==='fi')te.style.fontStyle=val;
+}
+function utgl(id,prop,v1,v2,btn){
+  const el=G.els.find(e=>e.id===id);if(!el)return;
+  const next=(el[prop]===v1)?v2:v1;
+  uprop(id,prop,next);
+  btn.classList.toggle('on',next===v1);
 }
 function ual(id,a,btn){
   const el=G.els.find(e=>e.id===id);if(!el)return;el.al=a;
@@ -1070,7 +1169,9 @@ function ulayers(){
 
 function usm(){
   const sz=SZ[G.size];
-  document.getElementById('s-sz').textContent=G.size+' ('+sz.lbl+')';
+  const dims=szDims();
+  const lbl=`${dims.w/10}×${dims.h/10} cm`;
+  document.getElementById('s-sz').textContent=G.size+(G.orient==='landscape'?' H':'')+' ('+lbl+')';
   document.getElementById('s-fc').textContent=FCNM[G.fc]||'Custom';
   const md=G.els.filter(e=>e.type==='medal').length;
   document.getElementById('s-md').textContent=md;
@@ -1099,7 +1200,7 @@ function doReset(){
 
 // SAVE/LOAD
 function saveDesign(){
-  const data={size:G.size,fc:G.fc,fw:G.fw,bgc:G.bgc,bgp:G.bgp,msh:G.msh,mcm:G.mcm,mct:G.mct,els:G.els,timestamp:new Date().toISOString()};
+  const data={size:G.size,orient:G.orient,fc:G.fc,fw:G.fw,bgc:G.bgc,bgp:G.bgp,msh:G.msh,mcm:G.mcm,mct:G.mct,els:G.els,timestamp:new Date().toISOString()};
   localStorage.setItem('medalFrameDesign',JSON.stringify(data));
   toast('✓ Dizajn sačuvan!');
 }
@@ -1108,10 +1209,11 @@ function loadDesign(){
   if(!data){toast('Nema sačuvanih dizajna');return;}
   try{
     const d=JSON.parse(data);
-    G.size=d.size||'A4';G.fc=d.fc||'#111111';G.fw=d.fw||14;G.bgc=d.bgc||'#ffffff';G.bgp=d.bgp||'none';G.msh=d.msh||'circle';G.mcm=d.mcm||7;G.mct=d.mct||1;G.els=d.els||[];
-    
+    G.size=d.size||'A4';G.orient=d.orient||'portrait';G.fc=d.fc||'#111111';G.fw=d.fw||14;G.bgc=d.bgc||'#ffffff';G.bgp=d.bgp||'none';G.msh=d.msh||'circle';G.mcm=d.mcm||7;G.mct=d.mct||1;G.els=d.els||[];
+
     // Update UI
     document.querySelectorAll('#sz-c .chip').forEach(c=>c.classList.toggle('on',c.textContent.includes(G.size)));
+    document.querySelectorAll('#or-c .chip').forEach((c,i)=>c.classList.toggle('on',(i===0&&G.orient==='portrait')||(i===1&&G.orient==='landscape')));
     document.getElementById('fw-v').textContent=G.fw+'px';
     document.getElementById('frame').style.borderWidth=G.fw+'px';
     document.getElementById('frame').style.borderColor=G.fc;
@@ -1149,6 +1251,44 @@ function openOrderModal(){
 function closeOrderModal(){
   document.getElementById('orderModal').classList.remove('show');
 }
+function escX(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function generateSVG(){
+  const dims=szDims();
+  const wMM=dims.w/10, hMM=dims.h/10;
+  const cvs=fc();
+  const scale=wMM/cvs.offsetWidth;
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${wMM}mm" height="${hMM}mm" viewBox="0 0 ${wMM} ${hMM}">`;
+  s+=`<rect width="${wMM}" height="${hMM}" fill="${escX(G.bgc)}"/>`;
+  for(const el of G.els){
+    const x=+(el.x*scale).toFixed(3), y=+(el.y*scale).toFixed(3);
+    const w=+((el.w||0)*scale).toFixed(3), h=+((el.h||0)*scale).toFixed(3);
+    if(el.type==='medal'){
+      const r=+(w/2).toFixed(3);
+      s+=`<circle cx="${x+r}" cy="${y+r}" r="${r}" fill="rgba(201,168,76,.18)" stroke="#C9A84C" stroke-width="0.4"/>`;
+      s+=`<text x="${x+r}" y="${y+r+1.2}" text-anchor="middle" font-size="2.8" fill="#C9A84C" font-family="sans-serif">MEDALJA ${el.w?Math.round(el.w/G.ppc*10)/10+'cm':''}</text>`;
+    } else if(el.type==='image'){
+      s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="rgba(0,0,0,.04)" stroke="#aaa" stroke-width="0.4" stroke-dasharray="2,1.5"/>`;
+      s+=`<text x="${x+w/2}" y="${y+h/2-1.5}" text-anchor="middle" font-size="3.5" fill="#999" font-family="sans-serif">📸</text>`;
+      s+=`<text x="${x+w/2}" y="${y+h/2+2.5}" text-anchor="middle" font-size="2.5" fill="#aaa" font-family="sans-serif">Fotografija</text>`;
+    } else if(['name','number','event','sentence','players'].includes(el.type)){
+      const fs=+((el.fs||14)*scale).toFixed(3);
+      const anchor=el.al==='left'?'start':el.al==='right'?'end':'middle';
+      const tx=el.al==='left'?x:el.al==='right'?x+w:x+w/2;
+      const fw=el.fb==='bold'?'bold':'normal';
+      const fi=el.fi==='italic'?'italic':'normal';
+      const ff=escX(el.ff||'Manrope');
+      const lines=(el.txt||'').split('\n');
+      lines.forEach((line,i)=>{
+        s+=`<text x="${tx}" y="${+(y+fs*(i+1)).toFixed(3)}" text-anchor="${anchor}" font-size="${fs}" font-weight="${fw}" font-style="${fi}" fill="${escX(el.tc||'#111')}" font-family="${ff},sans-serif">${escX(line)}</text>`;
+      });
+    } else if(el.type==='divider'){
+      const sw=Math.max(0.2,+((el.h||2)*scale).toFixed(3));
+      s+=`<line x1="${x}" y1="${y}" x2="${+(x+w).toFixed(3)}" y2="${y}" stroke="${escX(el.dc||'#C9A84C')}" stroke-width="${sw}" opacity="0.75"/>`;
+    }
+  }
+  s+='</svg>';
+  return s;
+}
 function submitOrder(event){
   const name=document.getElementById('oname').value.trim();
   const email=document.getElementById('oemail').value.trim();
@@ -1156,10 +1296,10 @@ function submitOrder(event){
   const address=document.getElementById('oaddress').value.trim();
   const notes=document.getElementById('onotes').value.trim();
   const fileInput=document.getElementById('finp');
-  const imageFile=fileInput?.files?.[0] || null;
+  const imageFile=fileInput?.files?.[0]||null;
 
   if(!name||!email||!phone||!address){
-    if(event){event.preventDefault();}
+    if(event)event.preventDefault();
     toast('Popunite sva obavezna polja!');
     return false;
   }
@@ -1170,20 +1310,18 @@ function submitOrder(event){
   const tot=Math.max(sz.p,sz.p+ex*200+(md-1)*500);
 
   const orderData={
-    customer:{name,email,phone,address,notes,imageName:imageFile?.name || ''},
-    design:{size:G.size,frameColor:G.fc,frameWidth:G.fw,backgroundColor:G.bgc,backgroundPattern:G.bgp,medalShape:G.msh,medalSize:G.mcm,medalCount:G.mct,elements:G.els},
+    customer:{name,email,phone,address,notes,imageName:imageFile?.name||''},
+    design:{size:G.size,orient:G.orient,frameColor:G.fc,frameWidth:G.fw,backgroundColor:G.bgc,backgroundPattern:G.bgp,medalShape:G.msh,medalSize:G.mcm,medalCount:G.mct,elements:G.els},
     price:tot,
     timestamp:new Date().toISOString()
   };
 
   document.getElementById('orderData').value=JSON.stringify(orderData);
-  console.log('=== NARUDŽBENICA ===');
-  console.log(JSON.stringify(orderData,null,2));
+  document.getElementById('orderSvg').value=generateSVG();
 
   const orders=JSON.parse(localStorage.getItem('medalOrders')||'[]');
   orders.push(orderData);
   localStorage.setItem('medalOrders',JSON.stringify(orders));
-
   return true;
 }
 
