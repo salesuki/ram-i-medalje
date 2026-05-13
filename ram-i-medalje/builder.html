@@ -1129,10 +1129,12 @@ function onEMD(e){
   if(e.target.contentEditable==='true'&&e.target.style.pointerEvents==='auto')return;
   const w=e.currentTarget;
   G.movId=w.dataset.id;G.mox=e.clientX-w.offsetLeft;G.moy=e.clientY-w.offsetTop;
+  G.movSx=e.clientX;G.movSy=e.clientY;G.movMoved=false;
   selEl(G.movId);showG();e.preventDefault();
 }
 function onMM(e){
   if(G.movId){
+    if(Math.abs(e.clientX-G.movSx)>8||Math.abs(e.clientY-G.movSy)>8)G.movMoved=true;
     const w=bid(G.movId);if(!w)return;
     const canvas=fc();
     let x=e.clientX-G.mox,y=e.clientY-G.moy;
@@ -1153,7 +1155,22 @@ function onMM(e){
     const el=G.els.find(e=>e.id===G.resId);if(el){el.w=nw;el.h=nh;}
   }
 }
-function onMU(){if(G.movId){hideG();G.movId=null;}if(G.resId)G.resId=null;}
+function onMU(){
+  if(G.movId){
+    hideG();
+    if(isMob()&&!G.movMoved){
+      const right=document.querySelector('.right');
+      const left=document.querySelector('.left');
+      const ov=document.getElementById('mob-ov');
+      right.classList.add('mob-open');
+      left.classList.remove('mob-open');
+      ov.classList.add('show');
+      document.querySelectorAll('.mnb').forEach(b=>b.classList.toggle('on',b.id==='mnb-prp'));
+    }
+    G.movId=null;G.movMoved=false;
+  }
+  if(G.resId)G.resId=null;
+}
 
 function selEl(id){
   G.sel=id;
@@ -1162,15 +1179,6 @@ function selEl(id){
   const el=G.els.find(e=>e.id===id);
   rprops(el);
   document.querySelectorAll('#r-lay .litm').forEach(l=>l.classList.toggle('on',l.dataset.id===id));
-  if(isMob()&&el){
-    const right=document.querySelector('.right');
-    const left=document.querySelector('.left');
-    const ov=document.getElementById('mob-ov');
-    right.classList.add('mob-open');
-    left.classList.remove('mob-open');
-    ov.classList.add('show');
-    document.querySelectorAll('.mnb').forEach(b=>b.classList.toggle('on',b.id==='mnb-prp'));
-  }
 }
 function desel(e){
   const ids=['fcanvas','frame','gov','cw'];
