@@ -208,7 +208,7 @@ body{background:var(--dark);color:var(--t1);display:flex;flex-direction:column;h
 .gcl{border:1px dashed rgba(201,168,76,.25);}
 
 /* canvas elements */
-.cel{position:absolute;cursor:move;user-select:none;z-index:20;}
+.cel{position:absolute;cursor:move;user-select:none;z-index:20;touch-action:none;}
 .cel.on{outline:1.5px solid var(--gold);outline-offset:2px;}
 .cctrl{position:absolute;top:-24px;right:0;display:flex;gap:3px;
   opacity:0;transition:opacity .14s;pointer-events:all;}
@@ -358,7 +358,88 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
 .omb .cn{background:transparent;border:1px solid var(--bd2);color:var(--t2);}
 .omb .cn:hover{border-color:var(--t1);color:var(--t1);}
 
-@media(max-width:900px){.left,.right{display:none;}.cw{padding:20px;}}
+/* Mobile panel header – hidden on desktop */
+.mob-hdr{display:none;}
+/* Mobile bottom nav – hidden on desktop */
+#mob-nav{display:none;}
+
+@media(max-width:900px){
+  /* Top bar compact */
+  .top{padding:0 8px;gap:6px;}
+  .logo{font-size:15px;}
+  .logo-back{display:none;}
+  .steps{display:none;}
+  .acts .ag{display:none;}
+  .acts{gap:4px;}
+
+  /* Summary bar compact */
+  .sbar{padding:5px 10px;gap:8px;flex-wrap:wrap;}
+  .sbar .slb{display:none;}
+  .sbar .svl{font-size:10px;}
+  .sbar .spr{font-size:15px;margin-left:0;}
+  .sbar .obtn{padding:5px 12px;font-size:11px;}
+
+  /* Canvas */
+  .cw{padding:8px;}
+
+  /* Slide-up panels */
+  .left,.right{
+    position:fixed;
+    bottom:56px;left:0;right:0;
+    width:100%;height:72vh;
+    border-right:none;border-left:none;
+    border-top:1px solid var(--bd);
+    border-radius:16px 16px 0 0;
+    transform:translateY(105%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    z-index:200;flex-shrink:0;
+    flex-direction:column;
+  }
+  .left.mob-open,.right.mob-open{transform:translateY(0);}
+
+  /* Drag pill handle */
+  .left::before,.right::before{
+    content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+    width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);
+  }
+
+  /* Panel header on mobile */
+  .mob-hdr{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 16px 10px;border-bottom:1px solid var(--bd);flex-shrink:0;
+  }
+  .mob-hdr-t{font-size:13px;font-weight:800;color:var(--t1);}
+  .mob-hdr-x{
+    width:28px;height:28px;border-radius:7px;border:1px solid var(--bd2);
+    background:var(--s3);color:var(--t2);font-size:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Manrope',sans-serif;
+  }
+
+  /* Bottom nav */
+  #mob-nav{
+    display:flex;height:56px;
+    background:var(--dark-2);border-top:1px solid var(--bd);
+    flex-shrink:0;z-index:300;
+    padding-bottom:env(safe-area-inset-bottom,0);
+  }
+  .mnb{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:2px;border:none;background:none;font-family:'Manrope',sans-serif;
+    color:var(--t3);cursor:pointer;transition:.14s;padding:4px 0;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .mnb.on{color:var(--gold);}
+  .mnb .mi{font-size:18px;line-height:1.1;}
+  .mnb .ml{font-size:8px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+
+  /* Backdrop overlay */
+  #mob-ov{
+    position:fixed;inset:0;bottom:56px;
+    background:rgba(0,0,0,.55);z-index:199;display:none;
+  }
+  #mob-ov.show{display:block;}
+}
 </style>
 </head>
 <body>
@@ -385,6 +466,7 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
 
 <!-- LEFT (scrollable) -->
 <div class="left">
+<div class="mob-hdr"><span class="mob-hdr-t" id="mob-hdr-t">Postavke</span><button class="mob-hdr-x" onclick="closeMobPanels()">✕</button></div>
 <div class="ls" id="ls">
 
   <div class="sec" id="s-frame" style="padding-top:14px;">
@@ -561,7 +643,7 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
 
 <!-- CANVAS (fixed, no scroll) -->
 <div class="cw" id="cw" ondragover="event.preventDefault()" ondrop="onDrop(event)" onclick="desel(event)">
-  <div class="chint">Prevuci element na ram · Klikni za selekciju · ← → strelice za pomeranje</div>
+  <div class="chint">Prevuci dodaci na ram · Klikni za selekciju · ← → za pomeranje</div>
   <div id="frame" ondragover="event.preventDefault()" ondrop="onDrop(event)" onclick="desel(event)">
     <div id="fcanvas" ondragover="event.preventDefault()" ondrop="onDrop(event)" onclick="desel(event)">
       <div class="gov" id="gov"></div>
@@ -571,6 +653,7 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
 
 <!-- RIGHT (scrollable) -->
 <div class="right">
+<div class="mob-hdr"><span class="mob-hdr-t">Svojstva</span><button class="mob-hdr-x" onclick="closeMobPanels()">✕</button></div>
 <div class="rs">
 <div class="rp">
   <div id="r-emp" class="emp"><div class="ei">↖</div><p>Klikni na element na ramu da urediš svojstva</p></div>
@@ -583,6 +666,16 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
 </div>
 
 </div><!-- ws -->
+
+<!-- MOBILE BOTTOM NAV -->
+<nav id="mob-nav">
+  <button class="mnb on" id="mnb-frame" onclick="mobP('s-frame',this)"><span class="mi">🖼️</span><span class="ml">Ram</span></button>
+  <button class="mnb" id="mnb-medal" onclick="mobP('s-medal',this)"><span class="mi">🏅</span><span class="ml">Medalja</span></button>
+  <button class="mnb" id="mnb-bg" onclick="mobP('s-bg',this)"><span class="mi">🎨</span><span class="ml">Pozadina</span></button>
+  <button class="mnb" id="mnb-add" onclick="mobP('s-addons',this)"><span class="mi">➕</span><span class="ml">Dodaci</span></button>
+  <button class="mnb" id="mnb-prp" onclick="mobPrp(this)"><span class="mi">⚙️</span><span class="ml">Svojstva</span></button>
+</nav>
+<div id="mob-ov" onclick="closeMobPanels()"></div>
 
 <!-- SUMMARY BAR -->
 <div class="sbar">
@@ -667,6 +760,13 @@ window.addEventListener('DOMContentLoaded',()=>{
   setupAddonDrags();
   document.addEventListener('mousemove',onMM);
   document.addEventListener('mouseup',onMU);
+  document.addEventListener('touchmove',e=>{
+    if(G.movId||G.resId){
+      e.preventDefault();
+      const t=e.touches[0];onMM({clientX:t.clientX,clientY:t.clientY});
+    }
+  },{passive:false});
+  document.addEventListener('touchend',onMU);
   let rt;
   window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{
     const pw=fc().offsetWidth,ph=fc().offsetHeight;
@@ -907,6 +1007,29 @@ function setupAddonDrags(){
       document.addEventListener('mouseup',onUp);
       e.preventDefault();
     });
+    // Mobile: tap to add element to canvas center
+    adi.addEventListener('touchstart',e=>{
+      const t=e.touches[0];
+      adi._tapStart={x:t.clientX,y:t.clientY};
+    },{passive:true});
+    adi.addEventListener('touchend',e=>{
+      if(!adi._tapStart)return;
+      const t=e.changedTouches[0];
+      const dx=Math.abs(t.clientX-adi._tapStart.x);
+      const dy=Math.abs(t.clientY-adi._tapStart.y);
+      adi._tapStart=null;
+      if(dx<15&&dy<15){
+        const canvas=fc();
+        const cw=canvas.offsetWidth,ch=canvas.offsetHeight;
+        const def=addonDef(type,cw,ch);
+        const x=Math.max(0,Math.round((cw-(def.w||100))/2));
+        const y=Math.max(0,Math.round((ch-(def.h||30))/2));
+        addEl({type,x,y,...def});
+        showG();usm();
+        closeMobPanels();
+        toast('Element dodat ✓');
+      }
+    },{passive:true});
   });
 }
 
@@ -973,6 +1096,11 @@ function relEl(el){
   }
 
   wrap.addEventListener('mousedown',onEMD);
+  wrap.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1)return;
+    const t=e.touches[0];
+    onEMD({target:e.target,currentTarget:wrap,clientX:t.clientX,clientY:t.clientY,preventDefault:()=>e.preventDefault()});
+  },{passive:false});
   wrap.addEventListener('click',e=>{e.stopPropagation();selEl(el.id);});
   canvas.appendChild(wrap);
 }
@@ -980,11 +1108,17 @@ function relEl(el){
 function arh(wrap,el){
   ['se','sw'].forEach(d=>{
     const h=document.createElement('div');h.className='rh '+d;
+    const startRes=(cx,cy)=>{
+      G.resId=el.id;G.rdir=d;
+      G.rsx=cx;G.rsy=cy;G.rsw=wrap.offsetWidth;G.rsh=wrap.offsetHeight;
+    };
     h.addEventListener('mousedown',e=>{
-      e.stopPropagation();G.resId=el.id;G.rdir=d;
-      G.rsx=e.clientX;G.rsy=e.clientY;G.rsw=wrap.offsetWidth;G.rsh=wrap.offsetHeight;
-      e.preventDefault();
+      e.stopPropagation();startRes(e.clientX,e.clientY);e.preventDefault();
     });
+    h.addEventListener('touchstart',e=>{
+      e.stopPropagation();
+      const t=e.touches[0];startRes(t.clientX,t.clientY);e.preventDefault();
+    },{passive:false});
     wrap.appendChild(h);
   });
 }
@@ -1028,6 +1162,15 @@ function selEl(id){
   const el=G.els.find(e=>e.id===id);
   rprops(el);
   document.querySelectorAll('#r-lay .litm').forEach(l=>l.classList.toggle('on',l.dataset.id===id));
+  if(isMob()&&el){
+    const right=document.querySelector('.right');
+    const left=document.querySelector('.left');
+    const ov=document.getElementById('mob-ov');
+    right.classList.add('mob-open');
+    left.classList.remove('mob-open');
+    ov.classList.add('show');
+    document.querySelectorAll('.mnb').forEach(b=>b.classList.toggle('on',b.id==='mnb-prp'));
+  }
 }
 function desel(e){
   const ids=['fcanvas','frame','gov','cw'];
@@ -1323,6 +1466,47 @@ function submitOrder(event){
   orders.push(orderData);
   localStorage.setItem('medalOrders',JSON.stringify(orders));
   return true;
+}
+
+// ── MOBILE ──
+function isMob(){return window.innerWidth<=900;}
+
+function mobP(secId,btn){
+  const left=document.querySelector('.left');
+  const right=document.querySelector('.right');
+  const ov=document.getElementById('mob-ov');
+  const hdrT=document.getElementById('mob-hdr-t');
+  const labels={'s-frame':'Ram','s-medal':'Medalja','s-bg':'Pozadina','s-addons':'Dodaci'};
+  const alreadyOpen=left.classList.contains('mob-open');
+  const sameSec=left.dataset.mobSec===secId;
+  if(alreadyOpen&&sameSec){closeMobPanels();return;}
+  left.dataset.mobSec=secId;
+  if(hdrT)hdrT.textContent=labels[secId]||'Postavke';
+  left.classList.add('mob-open');
+  right.classList.remove('mob-open');
+  ov.classList.add('show');
+  document.querySelectorAll('.mnb').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  requestAnimationFrame(()=>document.getElementById(secId)?.scrollIntoView({block:'start'}));
+}
+
+function mobPrp(btn){
+  const left=document.querySelector('.left');
+  const right=document.querySelector('.right');
+  const ov=document.getElementById('mob-ov');
+  if(right.classList.contains('mob-open')){closeMobPanels();return;}
+  right.classList.add('mob-open');
+  left.classList.remove('mob-open');
+  ov.classList.add('show');
+  document.querySelectorAll('.mnb').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+}
+
+function closeMobPanels(){
+  document.querySelector('.left')?.classList.remove('mob-open');
+  document.querySelector('.right')?.classList.remove('mob-open');
+  document.getElementById('mob-ov')?.classList.remove('show');
+  document.querySelectorAll('.mnb').forEach(b=>b.classList.remove('on'));
 }
 
 document.addEventListener('keydown',e=>{
