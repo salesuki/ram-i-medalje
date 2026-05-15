@@ -712,6 +712,7 @@ textarea.pi{resize:vertical;min-height:50px;line-height:1.5;}
         <div style="font-size:11px;color:var(--t3);margin-top:4px;">
           <strong style="color:var(--gold);">Ukupna cena:</strong> <span id="orderPrice">2.400</span> RSD
         </div>
+        <button type="button" onclick="downloadSVG()" style="width:100%;padding:9px;border-radius:6px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:var(--gold);font-size:11px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;margin-top:4px;">📥 Preuzmi SVG dizajna</button>
       </div>
       <div class="omb">
         <button class="cn" type="button" onclick="closeOrderModal()">Odustani</button>
@@ -1402,6 +1403,17 @@ function openOrderModal(){
 function closeOrderModal(){
   document.getElementById('orderModal').classList.remove('show');
 }
+function downloadSVG(){
+  const svg=generateSVG();
+  const blob=new Blob([svg],{type:'image/svg+xml'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`medalframe-${G.size}-${Date.now()}.svg`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('SVG preuzet ✓');
+}
 function escX(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function generateSVG(){
   const dims=szDims();
@@ -1509,14 +1521,7 @@ function submitOrder(event){
   // Readable summary for Netlify dashboard
   document.getElementById('orderData').value=formatOrderText(orderData);
 
-  // SVG as base64 data URL — paste in browser to view design
-  const svg=generateSVG();
-  try{
-    const b64=btoa(unescape(encodeURIComponent(svg)));
-    document.getElementById('orderSvg').value='data:image/svg+xml;base64,'+b64;
-  }catch(_){
-    document.getElementById('orderSvg').value=svg;
-  }
+  document.getElementById('orderSvg').value='(preuzeto kao .svg fajl)';
 
   const orders=JSON.parse(localStorage.getItem('medalOrders')||'[]');
   orders.push(orderData);
