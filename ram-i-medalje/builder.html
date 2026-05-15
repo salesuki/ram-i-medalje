@@ -1440,6 +1440,45 @@ function generateSVG(){
   s+='</svg>';
   return s;
 }
+function formatOrderText(d){
+  const BGP={none:'Bez',lines:'Linije',dots:'Tačke',grid:'Mreža',diag:'Dijagonale',hatch:'Šah'};
+  const MSH={circle:'Krug',hexagon:'Hexagon',square:'Kvadrat',star:'Zvezda'};
+  const SZL={A4:'A4 — 21×29.7 cm',A3:'A3 — 29.7×42 cm',A2:'A2 — 42×59.4 cm',SQ:'Kvadrat — 30×30 cm',PAN:'Pano — 40×20 cm',TALL:'Uski — 20×50 cm'};
+  const ts=new Date(d.timestamp);
+  const dat=ts.toLocaleDateString('sr-RS')+' u '+ts.toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'});
+  const c=d.customer, dz=d.design;
+  const ori=dz.orient==='landscape'?'Horizontalno':'Vertikalno';
+  const extras=(dz.elements||[]).filter(e=>e.type!=='medal');
+  let t='';
+  t+=`▪ NARUDŽBENICA — ${dat}\n`;
+  t+=`${'─'.repeat(36)}\n\n`;
+  t+=`KUPAC\n`;
+  t+=`Ime:     ${c.name}\n`;
+  t+=`Email:   ${c.email}\n`;
+  t+=`Telefon: ${c.phone}\n`;
+  t+=`Adresa:  ${c.address}\n`;
+  if(c.notes)t+=`Napomena: ${c.notes}\n`;
+  if(c.imageName)t+=`Slika: ${c.imageName}\n`;
+  t+=`\nRAM\n`;
+  t+=`Veličina:  ${SZL[dz.size]||dz.size}, ${ori}\n`;
+  t+=`Okvir:     ${FCNM[dz.frameColor]||dz.frameColor}, ${dz.frameWidth}px debljine\n`;
+  t+=`\nMEDALJE\n`;
+  t+=`${dz.medalCount} × ${MSH[dz.medalShape]||dz.medalShape}, prečnik ${dz.medalSize} cm\n`;
+  t+=`\nPOZADINA\n`;
+  t+=`Boja: ${dz.backgroundColor}  |  Tekstura: ${BGP[dz.backgroundPattern]||'Bez'}\n`;
+  if(extras.length){
+    t+=`\nDODATCI (${extras.length})\n`;
+    extras.forEach((el,i)=>{
+      const nm=TNMS[el.type]||el.type;
+      const txt=el.txt?` — "${el.txt.substring(0,60).replace(/\n/g,' ')}"` :'';
+      t+=`${i+1}. ${nm}${txt}\n`;
+    });
+  }
+  t+=`\n${'─'.repeat(36)}\n`;
+  t+=`UKUPNA CENA: ${(d.price||0).toLocaleString('sr-RS')} RSD\n`;
+  return t;
+}
+
 function submitOrder(event){
   const name=document.getElementById('oname').value.trim();
   const email=document.getElementById('oemail').value.trim();
@@ -1467,8 +1506,17 @@ function submitOrder(event){
     timestamp:new Date().toISOString()
   };
 
-  document.getElementById('orderData').value=JSON.stringify(orderData);
-  document.getElementById('orderSvg').value=generateSVG();
+  // Readable summary for Netlify dashboard
+  document.getElementById('orderData').value=formatOrderText(orderData);
+
+  // SVG as base64 data URL — paste in browser to view design
+  const svg=generateSVG();
+  try{
+    const b64=btoa(unescape(encodeURIComponent(svg)));
+    document.getElementById('orderSvg').value='data:image/svg+xml;base64,'+b64;
+  }catch(_){
+    document.getElementById('orderSvg').value=svg;
+  }
 
   const orders=JSON.parse(localStorage.getItem('medalOrders')||'[]');
   orders.push(orderData);
