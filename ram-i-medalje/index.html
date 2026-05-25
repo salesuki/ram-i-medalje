@@ -315,30 +315,188 @@
   .feature-title { font-size:1.1rem; margin-bottom:0.7rem; }
   .feature-desc { font-family:sans-serif; font-size:0.88rem; color:var(--gray-light); line-height:1.8; }
 
-  /* HOW IT WORKS */
+  /* HOW IT WORKS — stepper */
   .how-section { background:var(--black); }
-  .steps-container { display:flex; flex-direction:column; gap:0; margin-top:4rem; max-width:900px; }
-  .step {
-    display:grid; grid-template-columns:80px 1fr; gap:2rem;
-    padding:2.5rem 0;
-    border-bottom:1px solid rgba(201,168,76,0.08);
-    position:relative;
+  .how-layout {
+    display:grid; grid-template-columns:1fr 1.15fr; gap:4rem;
+    margin-top:4rem; align-items:start;
   }
-  .step:last-child { border-bottom:none; }
-  .step-num {
-    font-size:3rem; font-weight:200; color:rgba(30,80,180,0.2);
-    line-height:1; padding-top:0.2rem;
-    transition:color 0.3s;
+  .how-steps { display:flex; flex-direction:column; }
+  .how-step {
+    display:grid; grid-template-columns:52px 1fr; gap:1.4rem;
+    padding:1.6rem 0; cursor:pointer;
+    border-bottom:1px solid rgba(201,168,76,0.07);
   }
-  .step:hover .step-num { color:var(--gold); }
-  .step-title { font-size:1.25rem; margin-bottom:0.6rem; }
-  .step-desc { font-family:sans-serif; font-size:0.9rem; color:var(--gray-light); line-height:1.8; max-width:500px; }
-  .step-tag {
-    display:inline-block; margin-top:0.8rem;
-    padding:0.2rem 0.8rem;
-    background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2);
-    font-family:sans-serif; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase;
-    color:var(--gold);
+  .how-step:last-child { border-bottom:none; }
+  .hstep-num-col { display:flex; flex-direction:column; align-items:center; }
+  .hstep-num {
+    font-size:2.2rem; font-weight:200; color:rgba(255,255,255,0.14);
+    line-height:1; font-family:Georgia,serif; transition:color 0.35s; flex-shrink:0;
+  }
+  .how-step.hactive .hstep-num { color:var(--gold); }
+  .hstep-vline {
+    width:1px; flex:1; min-height:20px;
+    background:rgba(201,168,76,0.1); margin-top:0.6rem;
+  }
+  .how-step:last-child .hstep-vline { display:none; }
+  .hstep-body { padding-top:0.15rem; }
+  .hstep-tag {
+    font-family:sans-serif; font-size:0.58rem; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--gold);
+    opacity:0; transition:opacity 0.3s; display:block; margin-bottom:0.35rem;
+  }
+  .how-step.hactive .hstep-tag { opacity:1; }
+  .hstep-title {
+    font-size:1.05rem; font-weight:400; line-height:1.35;
+    color:rgba(237,233,224,0.3); transition:color 0.35s;
+  }
+  .how-step.hactive .hstep-title { color:var(--white); }
+  .hstep-desc {
+    font-family:sans-serif; font-size:0.855rem; color:var(--gray-light);
+    line-height:1.8; max-height:0; overflow:hidden;
+    opacity:0; margin-top:0;
+    transition:max-height 0.42s ease, opacity 0.3s 0.05s, margin 0.3s;
+  }
+  .how-step.hactive .hstep-desc { max-height:120px; opacity:1; margin-top:0.55rem; }
+  .hstep-bar {
+    height:2px; background:rgba(201,168,76,0.1);
+    margin-top:0.9rem; overflow:hidden;
+    max-height:0; transition:max-height 0.3s;
+  }
+  .how-step.hactive .hstep-bar { max-height:2px; }
+  .hstep-fill {
+    height:100%; width:0%;
+    background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  }
+  .how-step.hactive .hstep-fill { animation:hfill 4s linear forwards; }
+  @keyframes hfill { from{width:0%} to{width:100%} }
+
+  /* Preview panel */
+  .how-preview { position:sticky; top:6rem; height:400px; }
+  .hpanel {
+    position:absolute; inset:0;
+    border:1px solid rgba(201,168,76,0.14); border-radius:6px;
+    background:var(--dark-2); overflow:hidden;
+    opacity:0; transform:translateY(10px);
+    transition:opacity 0.4s ease, transform 0.4s ease;
+    pointer-events:none;
+  }
+  .hpanel.hactive { opacity:1; transform:translateY(0); pointer-events:auto; }
+  .hpanel-bar {
+    height:36px; background:rgba(255,255,255,0.03);
+    border-bottom:1px solid rgba(201,168,76,0.1);
+    display:flex; align-items:center; gap:6px; padding:0 14px;
+  }
+  .hpanel-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:rgba(255,255,255,0.1);
+  }
+  .hpanel-dot:first-child { background:rgba(220,80,80,0.4); }
+  .hpanel-dot:nth-child(2){ background:rgba(220,180,60,0.4); }
+  .hpanel-dot:nth-child(3){ background:rgba(60,200,100,0.3); }
+  .hpanel-ttl {
+    font-family:sans-serif; font-size:0.6rem; letter-spacing:0.18em;
+    text-transform:uppercase; color:rgba(255,255,255,0.2); margin-left:6px;
+  }
+  .hpanel-body { padding:18px 20px; height:calc(100% - 36px); display:flex; gap:16px; }
+
+  /* Panel 1 — format selector mockup */
+  .hmk-sidebar {
+    width:140px; flex-shrink:0;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .hmk-sl {
+    font-family:sans-serif; font-size:0.55rem; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:2px;
+  }
+  .hmk-chips { display:flex; flex-wrap:wrap; gap:4px; }
+  .hmk-chip {
+    padding:3px 7px; border-radius:3px;
+    border:1px solid rgba(201,168,76,0.2); background:rgba(255,255,255,0.03);
+    font-family:sans-serif; font-size:0.6rem; color:rgba(255,255,255,0.35);
+  }
+  .hmk-chip.hon {
+    border-color:var(--gold); color:var(--gold);
+    background:rgba(201,168,76,0.08);
+  }
+  .hmk-swatches { display:flex; gap:5px; flex-wrap:wrap; }
+  .hmk-sw {
+    width:18px; height:18px; border-radius:4px;
+    border:1px solid transparent;
+  }
+  .hmk-sw.hon { border-color:var(--gold); }
+  .hmk-frame-wrap {
+    flex:1; display:flex; align-items:center; justify-content:center;
+  }
+  .hmk-frame {
+    border-style:solid; border-color:#111;
+    border-width:10px; border-radius:2px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.6);
+    width:120px; height:160px;
+  }
+  .hmk-frame-inner { width:100%; height:100%; background:#fff; }
+
+  /* Panel 2 — canvas mockup */
+  .hmk-canvas {
+    width:100%; height:100%; position:relative;
+    background:#f8f5ee; border-radius:2px; overflow:hidden;
+  }
+  .hmk-medal {
+    position:absolute; border-radius:50%;
+    background:conic-gradient(from 15deg,#7a5c10,#f0cc58,#c9a84c,#7a5c10,#f0cc58,#c9a84c,#7a5c10);
+    box-shadow:0 3px 12px rgba(0,0,0,0.3);
+  }
+  .hmk-medal::before {
+    content:''; position:absolute; inset:12%;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 36%,#fce97a,#c9a84c 55%,#7a5c10);
+  }
+  .hmk-txt {
+    position:absolute; font-family:Georgia,serif;
+    color:#333; white-space:nowrap;
+  }
+  .hmk-img {
+    position:absolute; border:1px dashed rgba(0,0,0,0.15);
+    background:rgba(0,0,0,0.04);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.7rem; color:rgba(0,0,0,0.25); font-family:sans-serif;
+  }
+
+  /* Panel 3 — order mockup */
+  .hmk-order {
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    width:100%; height:100%; gap:12px;
+  }
+  .hmk-check {
+    width:48px; height:48px; border-radius:50%;
+    border:2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; color:var(--gold);
+    background:rgba(201,168,76,0.07);
+  }
+  .hmk-order-title {
+    font-size:0.95rem; color:var(--white); letter-spacing:0.02em;
+  }
+  .hmk-tl { display:flex; flex-direction:column; gap:7px; width:220px; }
+  .hmk-tl-item {
+    display:flex; align-items:center; gap:8px;
+    font-family:sans-serif; font-size:0.72rem;
+  }
+  .hmk-tl-dot {
+    width:8px; height:8px; border-radius:50%; flex-shrink:0;
+    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15);
+  }
+  .hmk-tl-item.hdone .hmk-tl-dot { background:var(--gold); border-color:var(--gold); }
+  .hmk-tl-item.hdone { color:var(--gray-light); }
+  .hmk-tl-item.hpending { color:rgba(255,255,255,0.3); }
+  .hmk-price {
+    font-family:Georgia,serif; font-size:1.4rem;
+    color:var(--gold); letter-spacing:-0.01em;
+  }
+  .hmk-ship {
+    font-family:sans-serif; font-size:0.7rem;
+    color:var(--gray); letter-spacing:0.04em;
   }
 
   /* BUILDER SECTION */
@@ -787,11 +945,11 @@
     .features-grid { grid-template-columns:1fr; gap:1rem; }
     .feature-card { padding:1.5rem; }
 
-    /* Steps */
-    .steps-container { gap:0; }
-    .step { flex-direction:column; gap:0.5rem; padding:1.5rem 0; }
-    .step-num { font-size:2rem; }
-    .step-desc { max-width:100%; }
+    /* Steps stepper */
+    .how-layout { grid-template-columns:1fr; gap:2rem; }
+    .how-preview { position:static; height:300px; }
+    .hpanel { border-radius:4px; }
+    .hstep-num { font-size:1.8rem; }
 
     /* Horizontal scroll cards */
     .hscroll-track { gap:1rem; }
@@ -970,30 +1128,147 @@
   <span class="section-label sans">Proces</span>
   <h2 class="section-title">Tri koraka do<br><em>savršenog rama</em></h2>
 
-  <div class="steps-container">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div class="step-body">
-        <h3 class="step-title">Izaberi tip i format</h3>
-        <p class="step-desc sans">Vertikalni ili horizontalni, jedna medalja ili više. Izaberi materijal okvira — tamno drvo, beli, crni minimalistički, ili zlatni akcenat.</p>
-        <span class="step-tag sans">Personalizacija</span>
+  <div class="how-layout">
+
+    <!-- Left: step list -->
+    <div class="how-steps">
+
+      <div class="how-step hactive" data-step="0">
+        <div class="hstep-num-col">
+          <div class="hstep-num">01</div>
+          <div class="hstep-vline"></div>
+        </div>
+        <div class="hstep-body">
+          <span class="hstep-tag sans">Personalizacija</span>
+          <h3 class="hstep-title">Izaberi tip i format</h3>
+          <p class="hstep-desc sans">Vertikalni ili horizontalni, jedna medalja ili više. Izaberi materijal okvira — tamno drvo, beli, crni minimalistički, ili zlatni akcenat.</p>
+          <div class="hstep-bar"><div class="hstep-fill"></div></div>
+        </div>
       </div>
+
+      <div class="how-step" data-step="1">
+        <div class="hstep-num-col">
+          <div class="hstep-num">02</div>
+          <div class="hstep-vline"></div>
+        </div>
+        <div class="hstep-body">
+          <span class="hstep-tag sans">Builder</span>
+          <h3 class="hstep-title">Dodaj tekst, sliku i dizajn</h3>
+          <p class="hstep-desc sans">Ime, datum, rezultat i tvoja fotografija sa događaja. Izaberi pozadinu i dodaj lični pečat svakom detalju.</p>
+          <div class="hstep-bar"><div class="hstep-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="how-step" data-step="2">
+        <div class="hstep-num-col">
+          <div class="hstep-num">03</div>
+          <div class="hstep-vline"></div>
+        </div>
+        <div class="hstep-body">
+          <span class="hstep-tag sans">Isporuka</span>
+          <h3 class="hstep-title">Naruči i budi ponosan</h3>
+          <p class="hstep-desc sans">Šaljemo ti dizajn na pregled. Besplatna dostava u Srbiji, štampa za 5–7 dana.</p>
+          <div class="hstep-bar"><div class="hstep-fill"></div></div>
+        </div>
+      </div>
+
     </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div class="step-body">
-        <h3 class="step-title">Dodaj tekst, sliku i dizajn</h3>
-        <p class="step-desc sans">Ime, datum, rezultat i tvoja fotografija sa događaja. Izaberi pozadinu — jednobojna, gradientna, teksturisana — i dodaj lični pečat svakom detalju.</p>
-        <span class="step-tag sans">Builder</span>
+
+    <!-- Right: preview panels -->
+    <div class="how-preview">
+
+      <!-- Panel 1: format selector -->
+      <div class="hpanel hactive" data-panel="0">
+        <div class="hpanel-bar">
+          <span class="hpanel-dot"></span><span class="hpanel-dot"></span><span class="hpanel-dot"></span>
+          <span class="hpanel-ttl sans">Builder — Format rama</span>
+        </div>
+        <div class="hpanel-body">
+          <div class="hmk-sidebar">
+            <div>
+              <div class="hmk-sl sans">Veličina</div>
+              <div class="hmk-chips">
+                <span class="hmk-chip hon">A4</span>
+                <span class="hmk-chip">A3</span>
+                <span class="hmk-chip">Kvadrat</span>
+                <span class="hmk-chip">Pano</span>
+              </div>
+            </div>
+            <div>
+              <div class="hmk-sl sans">Orijentacija</div>
+              <div class="hmk-chips">
+                <span class="hmk-chip hon">↕ Vertikalno</span>
+                <span class="hmk-chip">↔ Hor.</span>
+              </div>
+            </div>
+            <div>
+              <div class="hmk-sl sans">Boja okvira</div>
+              <div class="hmk-swatches">
+                <span class="hmk-sw hon" style="background:#111;"></span>
+                <span class="hmk-sw" style="background:#f2ede4;"></span>
+                <span class="hmk-sw" style="background:#4a2810;"></span>
+                <span class="hmk-sw" style="background:#c9a84c;"></span>
+                <span class="hmk-sw" style="background:#18304e;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="hmk-frame-wrap">
+            <div class="hmk-frame" style="border-color:#111111;">
+              <div class="hmk-frame-inner"></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div class="step-body">
-        <h3 class="step-title">Naruči i budi ponosan</h3>
-        <p class="step-desc sans">Pošaljemo ti prilagođeni dizajn na pregled. Kada dobiješ, znaj da je tvoj ram spreman za izložbu. Bepl dostava u Srbiji, štampa za 5-7 dana.</p>
-        <span class="step-tag sans">Isporuka</span>
+
+      <!-- Panel 2: canvas with medal + elements -->
+      <div class="hpanel" data-panel="1">
+        <div class="hpanel-bar">
+          <span class="hpanel-dot"></span><span class="hpanel-dot"></span><span class="hpanel-dot"></span>
+          <span class="hpanel-ttl sans">Builder — Dizajn</span>
+        </div>
+        <div class="hpanel-body" style="padding:10px;">
+          <div style="border:8px solid #111; border-radius:2px; flex:1; height:100%; box-shadow:0 6px 24px rgba(0,0,0,0.5); position:relative; overflow:hidden;">
+            <div class="hmk-canvas">
+              <div class="hmk-img" style="left:8%;top:6%;width:38%;height:34%;">📸 foto</div>
+              <div class="hmk-medal" style="left:50%;top:22%;transform:translateX(-50%);width:72px;height:72px;"></div>
+              <div class="hmk-txt" style="left:50%;top:68%;transform:translateX(-50%);font-size:11px;font-weight:600;color:#111;">Marko Petrović</div>
+              <div class="hmk-txt" style="left:50%;top:76%;transform:translateX(-50%);font-size:15px;color:#c9a84c;font-weight:300;">3:42:15</div>
+              <div class="hmk-txt" style="left:50%;top:84%;transform:translateX(-50%);font-size:7.5px;color:#888;letter-spacing:.06em;">BELGRADE MARATHON 2025</div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Panel 3: order confirmation -->
+      <div class="hpanel" data-panel="2">
+        <div class="hpanel-bar">
+          <span class="hpanel-dot"></span><span class="hpanel-dot"></span><span class="hpanel-dot"></span>
+          <span class="hpanel-ttl sans">Narudžbenica</span>
+        </div>
+        <div class="hpanel-body" style="align-items:center; justify-content:center;">
+          <div class="hmk-order">
+            <div class="hmk-check">✓</div>
+            <div class="hmk-order-title">Narudžbina primljena</div>
+            <div class="hmk-tl">
+              <div class="hmk-tl-item hdone">
+                <span class="hmk-tl-dot"></span>
+                <span class="sans">Dizajn potvrđen</span>
+              </div>
+              <div class="hmk-tl-item hdone">
+                <span class="hmk-tl-dot"></span>
+                <span class="sans">Štampa u toku</span>
+              </div>
+              <div class="hmk-tl-item hpending">
+                <span class="hmk-tl-dot"></span>
+                <span class="sans">Dostava 5–7 radnih dana</span>
+              </div>
+            </div>
+            <div class="hmk-price">2.400 RSD</div>
+            <div class="hmk-ship sans">🚚 Besplatna dostava u Srbiji</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1647,6 +1922,33 @@ function scrollTrack(dir) {
       setTimeout(() => section.scrollIntoView({ behavior: 'smooth' }), 300);
     }
   }
+})();
+
+// HOW IT WORKS STEPPER
+(function(){
+  const steps = document.querySelectorAll('.how-step');
+  const panels = document.querySelectorAll('.hpanel');
+  const DURATION = 4000;
+  let current = 0;
+  let timer = null;
+
+  function activate(idx) {
+    steps.forEach(s => s.classList.remove('hactive'));
+    panels.forEach(p => p.classList.remove('hactive'));
+
+    const fill = steps[idx].querySelector('.hstep-fill');
+    if (fill) { fill.style.animation = 'none'; fill.offsetHeight; fill.style.animation = ''; }
+
+    steps[idx].classList.add('hactive');
+    panels[idx].classList.add('hactive');
+    current = idx;
+
+    clearTimeout(timer);
+    timer = setTimeout(() => activate((current + 1) % steps.length), DURATION);
+  }
+
+  steps.forEach((s, i) => s.addEventListener('click', () => activate(i)));
+  activate(0);
 })();
 </script>
 
