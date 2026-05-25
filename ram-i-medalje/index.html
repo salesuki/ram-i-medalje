@@ -66,78 +66,130 @@
   /* HORIZONTAL SCROLL FRAMES */
   .hscroll-section { background: linear-gradient(180deg, var(--dark-2) 0%, var(--dark-3) 100%); padding: 6rem 0; overflow: hidden; }
   .hscroll-inner { padding: 0 4rem; }
-  .hscroll-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3rem; }
+  .hscroll-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1.6rem; }
   .hscroll-hint { font-family:sans-serif; font-size:0.78rem; letter-spacing:0.1em; color:var(--gray); display:flex; align-items:center; gap:0.5rem; }
   .hscroll-hint::before { content:''; display:block; width:30px; height:1px; background:var(--gray); }
-  .hscroll-hint::after { content:''; display:block; width:30px; height:1px; background:var(--gray); }
+  .hscroll-hint::after  { content:''; display:block; width:30px; height:1px; background:var(--gray); }
+
+  /* Filter tabs */
+  .hscroll-filters { display:flex; gap:5px; flex-wrap:wrap; align-items:center; margin-bottom:2rem; padding:0 4rem; }
+  .hscroll-flt {
+    padding:0.34rem 0.85rem; border:1px solid rgba(201,168,76,0.18);
+    font-family:sans-serif; font-size:0.63rem; letter-spacing:0.17em; text-transform:uppercase;
+    color:var(--gray); cursor:pointer; transition:all 0.18s; background:transparent;
+  }
+  .hscroll-flt:hover { color:var(--white); border-color:rgba(255,255,255,0.26); }
+  .hscroll-flt.fon { background:rgba(201,168,76,0.08); border-color:var(--gold); color:var(--gold); }
+  .hscroll-count { margin-left:auto; font-family:sans-serif; font-size:0.7rem; color:var(--gray); letter-spacing:0.05em; }
+  .hscroll-count b { color:var(--gold); font-weight:600; }
+
   .hscroll-track-wrap { position:relative; }
   .hscroll-track {
-    display: flex; gap: 1.5rem;
+    display: flex; gap: 1.4rem;
     overflow-x: auto; overflow-y: visible;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    padding: 2rem 4rem 2rem;
-    scrollbar-width: none;
-    cursor: grab;
+    padding: 1rem 4rem 2rem;
+    scrollbar-width: none; cursor: grab;
   }
   .hscroll-track:active { cursor: grabbing; }
   .hscroll-track::-webkit-scrollbar { display: none; }
   .hscroll-fade-left {
-    position:absolute; left:0; top:0; bottom:0; width:100px;
+    position:absolute; left:0; top:0; bottom:0; width:80px;
     background: linear-gradient(to right, var(--dark-2), transparent);
     pointer-events:none; z-index:2;
   }
   .hscroll-fade-right {
-    position:absolute; right:0; top:0; bottom:0; width:160px;
-    background: linear-gradient(to left, var(--dark-2), transparent);
+    position:absolute; right:0; top:0; bottom:0; width:150px;
+    background: linear-gradient(to left, var(--dark-3), transparent);
     pointer-events:none; z-index:2;
-    display:flex; align-items:center; justify-content:flex-end; padding-right:3rem;
+    display:flex; align-items:center; justify-content:flex-end; padding-right:2.5rem;
   }
   .scroll-arrow {
-    width:48px; height:48px; border:1px solid rgba(201,168,76,0.4);
+    width:44px; height:44px; border:1px solid rgba(201,168,76,0.4);
     display:flex; align-items:center; justify-content:center;
-    font-size:1.1rem; color:var(--gold); cursor:pointer; transition:all 0.3s;
-    background: rgba(8,8,8,0.8); pointer-events:all;
-    flex-shrink:0;
+    font-size:1rem; color:var(--gold); cursor:pointer; transition:all 0.28s;
+    background: rgba(6,14,34,0.92); pointer-events:all; flex-shrink:0;
   }
   .scroll-arrow:hover { background:var(--gold); color:var(--black); }
 
+  /* Cards */
   .frame-card {
-    flex-shrink: 0;
-    width: 240px;
-    scroll-snap-align: start;
-    display: flex; flex-direction: column;
-    transition: transform 0.4s;
-    cursor: pointer;
+    flex-shrink:0; width:220px; scroll-snap-align:start;
+    display:flex; flex-direction:column;
+    transition:transform 0.32s; cursor:pointer; position:relative;
   }
-  .frame-card:hover { transform: translateY(-8px); }
-  .frame-card-meta { border-top: 1px solid rgba(30,60,120,0.2); }
+  .frame-card:hover { transform:translateY(-7px); }
   .frame-card-visual {
-    aspect-ratio: 3/4;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 0.8rem; padding: 1.5rem;
-    position: relative;
+    aspect-ratio:3/4; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:0.65rem; padding:1.4rem; position:relative; overflow:hidden;
   }
-  .frame-card-medal {
-    font-size: 2.8rem; position:relative;
+
+  /* CSS medal */
+  .fcard-medal-wrap { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+  .fcard-ribbon-bar { width:7px; height:20px; border-radius:0 0 2px 2px; margin-bottom:-1px; }
+  .fcard-medal {
+    width:56px; height:56px; border-radius:50%;
+    background:conic-gradient(from 15deg,#7a5c10,#f0cc58,#c9a84c,#7a5c10,#f0cc58,#c9a84c,#7a5c10);
+    position:relative; flex-shrink:0;
+    box-shadow:0 4px 16px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.18);
   }
-  .frame-card-ribbon {
-    position:absolute; top:-28px; left:50%; transform:translateX(-50%);
-    width:10px; height:28px;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  .fcard-medal::before {
+    content:''; position:absolute; inset:13%; border-radius:50%;
+    background:radial-gradient(circle at 35% 36%,#fce97a,#c9a84c 55%,#7a5c10);
   }
-  .frame-card-name { font-size:0.85rem; letter-spacing:0.12em; text-align:center; }
-  .frame-card-event { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; text-align:center; color:var(--gold); }
-  .frame-card-time { font-family:sans-serif; font-size:1.1rem; font-weight:200; text-align:center; }
-  .frame-card-meta {
-    padding: 1rem 0 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    margin-top: 0.5rem;
+  /* Silver medal variant */
+  .fcard-medal.silver {
+    background:conic-gradient(from 15deg,#555,#ccc,#999,#555,#ccc,#999,#555);
   }
-  .frame-card-label { font-family:sans-serif; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gray); }
+  .fcard-medal.silver::before {
+    background:radial-gradient(circle at 35% 36%,#e8e8e8,#aaa 55%,#555);
+  }
+  /* Multi medals row */
+  .fcard-medals-row { display:flex; gap:5px; align-items:flex-end; }
+  .fcard-medals-row .fcard-medal { width:38px; height:38px; }
+  .fcard-medals-row .fcard-medal:nth-child(2) { width:46px; height:46px; }
+
+  /* Hover overlay */
+  .fcard-ov {
+    position:absolute; inset:0;
+    background:linear-gradient(to top,rgba(4,9,26,0.96) 28%,rgba(4,9,26,0.12) 68%,transparent 100%);
+    opacity:0; transition:opacity 0.24s;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    padding:1.1rem; gap:5px;
+  }
+  .frame-card:hover .fcard-ov { opacity:1; }
+  .fcard-ov-price { font-family:sans-serif; font-size:0.75rem; color:rgba(255,255,255,0.55); }
+  .fcard-btn {
+    padding:0.4rem 1rem; background:var(--gold); color:var(--black);
+    font-family:sans-serif; font-size:0.63rem; font-weight:800; letter-spacing:0.1em;
+    text-transform:uppercase; border:none; cursor:pointer; text-decoration:none;
+    display:inline-block; transition:background 0.17s; white-space:nowrap;
+  }
+  .fcard-btn:hover { background:var(--gold-light); }
+
+  /* Badge */
+  .fcard-badge {
+    position:absolute; top:9px; right:9px; z-index:3;
+    padding:2px 7px; font-family:sans-serif; font-size:0.52rem;
+    letter-spacing:0.15em; text-transform:uppercase; font-weight:800;
+  }
+  .fcard-badge-best { background:var(--gold); color:var(--black); }
+  .fcard-badge-new  { border:1px solid rgba(255,255,255,0.28); color:rgba(255,255,255,0.55); }
+
+  .frame-card-name  { font-size:0.82rem; letter-spacing:0.1em; text-align:center; }
+  .frame-card-event { font-family:sans-serif; font-size:0.57rem; letter-spacing:0.15em; text-transform:uppercase; text-align:center; color:var(--gold); }
+  .frame-card-time  { font-family:sans-serif; font-size:0.95rem; font-weight:200; text-align:center; }
+  .frame-card-meta  { padding:0.9rem 0 0; border-top:1px solid rgba(255,255,255,0.06); margin-top:0.5rem; }
+  .frame-card-label { font-family:sans-serif; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gray); }
   .frame-card-style { font-family:sans-serif; font-size:0.82rem; color:var(--white); margin-top:0.2rem; }
   .frame-card-price { font-family:sans-serif; font-size:0.75rem; color:var(--gold); margin-top:0.3rem; }
+
+  /* Progress dots */
+  .hscroll-dots { display:flex; gap:4px; padding:0.8rem 4rem 0; }
+  .hscroll-dot { height:2px; flex:1; background:rgba(201,168,76,0.14); cursor:pointer; transition:background 0.28s, flex 0.28s; }
+  .hscroll-dot.don { background:var(--gold); flex:2.2; }
 
   /* HERO — Cinematic Centered */
   .hero {
@@ -951,6 +1003,14 @@
     .hpanel { border-radius:4px; }
     .hstep-num { font-size:1.8rem; }
 
+    /* Scroll frames */
+    .hscroll-filters { padding:0 1.25rem; }
+    .hscroll-count { display:none; }
+    .hscroll-track { gap:1rem; padding:1rem 1.25rem 1.5rem; }
+    .frame-card { width:200px; min-width:200px; }
+    .hscroll-track-wrap { margin:0; }
+    .hscroll-dots { padding:0.6rem 1.25rem 0; }
+
     /* Horizontal scroll cards */
     .hscroll-track { gap:1rem; }
     .frame-card { width:240px; min-width:240px; }
@@ -1297,20 +1357,35 @@
     </div>
   </div>
 
+  <!-- Filter tabs -->
+  <div class="hscroll-filters">
+    <button class="hscroll-flt fon sans" onclick="filterCards('svi',this)">Svi</button>
+    <button class="hscroll-flt sans" onclick="filterCards('trcanje',this)">Trčanje</button>
+    <button class="hscroll-flt sans" onclick="filterCards('ples',this)">Ples</button>
+    <button class="hscroll-flt sans" onclick="filterCards('crossfit',this)">CrossFit</button>
+    <button class="hscroll-flt sans" onclick="filterCards('kolekcija',this)">Kolekcija</button>
+    <span class="hscroll-count sans"><b id="hcount">7</b> stilova</span>
+  </div>
+
   <div class="hscroll-track-wrap">
     <div class="hscroll-fade-left"></div>
     <div class="hscroll-track" id="htrack">
 
-      <!-- Card 1: Black / Maraton -->
-      <div class="frame-card">
+      <!-- Card 1: Black / Maraton — BESTSELLER -->
+      <div class="frame-card" data-cat="trcanje">
         <div class="frame-card-visual" style="background:#111; border:3px solid #222;">
-          <div class="frame-card-medal">
-            🥇
-            <div class="frame-card-ribbon" style="background:linear-gradient(#1a2a6a,#0d1f4d);"></div>
+          <span class="fcard-badge fcard-badge-best sans">Bestseller</span>
+          <div class="fcard-medal-wrap">
+            <div class="fcard-ribbon-bar" style="background:linear-gradient(#1a2a6a,#0d1f4d);"></div>
+            <div class="fcard-medal"></div>
           </div>
           <div class="frame-card-name" style="color:#F5F3EE;">Sara Jovanović</div>
           <div class="frame-card-event">Beogradski Maraton 2025</div>
           <div class="frame-card-time" style="color:#888;">3:42:18</div>
+          <div class="fcard-ov">
+            <div class="fcard-ov-price sans">od 2.990 RSD</div>
+            <a href="builder.html" class="fcard-btn sans">Izaberi ovaj stil →</a>
+          </div>
         </div>
         <div class="frame-card-meta">
           <div class="frame-card-label sans">Crni mat · A4</div>
@@ -1320,15 +1395,19 @@
       </div>
 
       <!-- Card 2: White / Ples -->
-      <div class="frame-card">
+      <div class="frame-card" data-cat="ples">
         <div class="frame-card-visual" style="background:#f5f0e8; border:3px solid #d4cfc7;">
-          <div class="frame-card-medal">
-            💃
-            <div class="frame-card-ribbon" style="background:linear-gradient(#8b0000,#cc2200);"></div>
+          <div class="fcard-medal-wrap">
+            <div class="fcard-ribbon-bar" style="background:linear-gradient(#8b0000,#cc2200);"></div>
+            <div class="fcard-medal"></div>
           </div>
           <div class="frame-card-name" style="color:#1a1a1a;">Milica Novak</div>
           <div class="frame-card-event" style="color:#8B6914;">Nac. Takmičenje 2025</div>
           <div class="frame-card-time" style="color:#666;">1. mesto</div>
+          <div class="fcard-ov">
+            <div class="fcard-ov-price sans">od 2.990 RSD</div>
+            <a href="builder.html" class="fcard-btn sans">Izaberi ovaj stil →</a>
+          </div>
         </div>
         <div class="frame-card-meta">
           <div class="frame-card-label sans">Beli · A4</div>
@@ -1337,16 +1416,20 @@
         </div>
       </div>
 
-      <!-- Card 3: Wood / Crossfit -->
-      <div class="frame-card">
+      <!-- Card 3: Dark wood / CrossFit -->
+      <div class="frame-card" data-cat="crossfit">
         <div class="frame-card-visual" style="background:#2a1508; border:3px solid #7B4F2E;">
-          <div class="frame-card-medal">
-            💪
-            <div class="frame-card-ribbon" style="background:linear-gradient(#c9a84c,#8B6914);"></div>
+          <div class="fcard-medal-wrap">
+            <div class="fcard-ribbon-bar" style="background:linear-gradient(#c9a84c,#8B6914);"></div>
+            <div class="fcard-medal"></div>
           </div>
           <div class="frame-card-name" style="color:#F5F3EE;">Ana Petrović</div>
           <div class="frame-card-event">CrossFit Open 2025</div>
           <div class="frame-card-time" style="color:#888;">Top 10%</div>
+          <div class="fcard-ov">
+            <div class="fcard-ov-price sans">od 2.990 RSD</div>
+            <a href="builder.html" class="fcard-btn sans">Izaberi ovaj stil →</a>
+          </div>
         </div>
         <div class="frame-card-meta">
           <div class="frame-card-label sans">Tamno drvo · A4</div>
@@ -1356,15 +1439,19 @@
       </div>
 
       <!-- Card 4: Gold / Triatlon -->
-      <div class="frame-card">
+      <div class="frame-card" data-cat="trcanje">
         <div class="frame-card-visual" style="background:#0e0d0b; border:3px solid #C9A84C;">
-          <div class="frame-card-medal" style="font-size:1.6rem; display:flex; gap:4px;">
-            🏊🚴🏃
-            <div class="frame-card-ribbon" style="background:linear-gradient(#C9A84C,#8B6914); top:-22px; width:8px; height:22px;"></div>
+          <div class="fcard-medal-wrap">
+            <div class="fcard-ribbon-bar" style="background:linear-gradient(#C9A84C,#8B6914);"></div>
+            <div class="fcard-medal"></div>
           </div>
-          <div class="frame-card-name" style="color:#F5F3EE; font-size:0.75rem;">Nikola Marković</div>
+          <div class="frame-card-name" style="color:#F5F3EE;">Nikola Marković</div>
           <div class="frame-card-event">Novi Sad Triathlon</div>
           <div class="frame-card-time" style="color:#888;">5:22:44</div>
+          <div class="fcard-ov">
+            <div class="fcard-ov-price sans">od 3.490 RSD</div>
+            <a href="builder.html" class="fcard-btn sans">Izaberi ovaj stil →</a>
+          </div>
         </div>
         <div class="frame-card-meta">
           <div class="frame-card-label sans">Zlatni · A4</div>
@@ -1373,16 +1460,20 @@
         </div>
       </div>
 
-      <!-- Card 5: Navy / School -->
-      <div class="frame-card">
+      <!-- Card 5: Navy / School / Ples -->
+      <div class="frame-card" data-cat="ples">
         <div class="frame-card-visual" style="background:#0c1820; border:3px solid #18304e;">
-          <div class="frame-card-medal">
-            🏆
-            <div class="frame-card-ribbon" style="background:linear-gradient(#C9A84C,#8B6914);"></div>
+          <div class="fcard-medal-wrap">
+            <div class="fcard-ribbon-bar" style="background:linear-gradient(#C9A84C,#8B6914);"></div>
+            <div class="fcard-medal"></div>
           </div>
           <div class="frame-card-name" style="color:#F5F3EE;">Marija Đurić</div>
           <div class="frame-card-event">Državno Takmičenje</div>
           <div class="frame-card-time" style="color:#888;">Zlatna medalja</div>
+          <div class="fcard-ov">
+            <div class="fcard-ov-price sans">od 2.990 RSD</div>
+            <a href="builder.html" class="fcard-btn sans">Izaberi ovaj stil →</a>
+          </div>
         </div>
         <div class="frame-card-meta">
           <div class="frame-card-label sans">Mornarički · A4</div>
@@ -1391,16 +1482,21 @@
         </div>
       </div>
 
-      <!-- Card 6: Silver/Antracit / Plivanje -->
-      <div class="frame-card">
-        <div class="frame-card-visual" style="background:#1a1a1a; border:3px solid #b0aea8;">
-          <div class="frame-card-medal">
-            🏊
-            <div class="frame-card-ribbon" style="background:linear-gradient(#b0aea8,#777);"></div>
+      <!-- Card 6: Silver / Plivanje — NEW -->
+      <div class="frame-card" data-cat="trcanje">
+        <div class="frame-card-visual" style="background:#141414; border:3px solid #b0aea8;">
+          <span class="fcard-badge fcard-badge-new sans">Novo</span>
+          <div class="fcard-medal-wrap">
+            <div class="fcard-ribbon-bar" style="background:linear-gradient(#b0aea8,#777);"></div>
+            <div class="fcard-medal silver"></div>
           </div>
           <div class="frame-card-name" style="color:#F5F3EE;">Igor Stefanović</div>
           <div class="frame-card-event">Plivanje 100m Slobodno</div>
           <div class="frame-card-time" style="color:#888;">58.20s</div>
+          <div class="fcard-ov">
+            <div class="fcard-ov-price sans">od 3.200 RSD</div>
+            <a href="builder.html" class="fcard-btn sans">Izaberi ovaj stil →</a>
+          </div>
         </div>
         <div class="frame-card-meta">
           <div class="frame-card-label sans">Srebrni · A3</div>
@@ -1409,18 +1505,21 @@
         </div>
       </div>
 
-      <!-- Card 7: 3 medals / Multi -->
-      <div class="frame-card" style="width:340px;">
-        <div class="frame-card-visual" style="background:#0e1e10; border:3px solid #1c4826; flex-direction:row; gap:1.2rem; padding:1.2rem;">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
-            <div style="font-size:1.8rem;">🥇</div>
-            <div style="font-size:1.8rem;">🥈</div>
-            <div style="font-size:1.8rem;">🥉</div>
+      <!-- Card 7: Multi-medal Kolekcija — NEW -->
+      <div class="frame-card" data-cat="kolekcija" style="width:260px;">
+        <div class="frame-card-visual" style="background:#0b180d; border:3px solid #1c4826;">
+          <span class="fcard-badge fcard-badge-new sans">Novo</span>
+          <div class="fcard-medals-row">
+            <div class="fcard-medal"></div>
+            <div class="fcard-medal"></div>
+            <div class="fcard-medal silver"></div>
           </div>
-          <div style="display:flex;flex-direction:column;justify-content:center;gap:0.4rem;">
-            <div class="frame-card-name" style="color:#F5F3EE;font-size:0.8rem;text-align:left;">Team Spark</div>
-            <div class="frame-card-event" style="text-align:left;">Sezona 2023 · 2024 · 2025</div>
-            <div style="font-family:sans-serif;font-size:0.7rem;color:#555;margin-top:0.3rem;">3 medalje · Pano 40×20</div>
+          <div class="frame-card-name" style="color:#F5F3EE; font-size:0.78rem;">Team Spark</div>
+          <div class="frame-card-event">Sezona 2023 · 2024 · 2025</div>
+          <div class="frame-card-time" style="color:#888; font-size:0.78rem;">3 medalje · Pano 40×20</div>
+          <div class="fcard-ov">
+            <div class="fcard-ov-price sans">od 4.990 RSD</div>
+            <a href="builder.html" class="fcard-btn sans">Izaberi ovaj stil →</a>
           </div>
         </div>
         <div class="frame-card-meta">
@@ -1430,15 +1529,15 @@
         </div>
       </div>
 
-      <!-- Card 8: CTA card -->
-      <div class="frame-card" style="width:260px;">
-        <div class="frame-card-visual" style="background:rgba(201,168,76,0.04); border:1px dashed rgba(201,168,76,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem;">
-          <div style="width:60px;height:60px;border:1px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--gold);">+</div>
+      <!-- CTA card (no data-cat — always visible) -->
+      <div class="frame-card" style="width:220px;">
+        <div class="frame-card-visual" style="background:rgba(201,168,76,0.03); border:1px dashed rgba(201,168,76,0.28); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4rem;">
+          <div style="width:52px;height:52px;border:1px solid rgba(201,168,76,0.38);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--gold);">+</div>
           <div style="text-align:center;">
-            <div style="font-family:sans-serif;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Napravi svoj</div>
-            <div style="font-family:Georgia,serif;font-size:1rem;color:var(--white);">Kreiraj <em style="color:var(--gold);">jedinstveni</em> ram</div>
+            <div style="font-family:sans-serif;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Napravi svoj</div>
+            <div style="font-family:Georgia,serif;font-size:0.95rem;color:var(--white);">Kreiraj <em style="color:var(--gold);">jedinstveni</em> ram</div>
           </div>
-          <a href="builder.html" class="btn-primary sans" style="font-size:0.72rem;padding:0.7rem 1.5rem;">Otvori Builder →</a>
+          <a href="builder.html" class="btn-primary sans" style="font-size:0.7rem;padding:0.65rem 1.3rem;">Otvori Builder →</a>
         </div>
         <div class="frame-card-meta">
           <div class="frame-card-label sans">Tvoj dizajn</div>
@@ -1452,6 +1551,9 @@
       <button class="scroll-arrow sans" onclick="scrollTrack(1)" aria-label="Skroluj desno">→</button>
     </div>
   </div>
+
+  <!-- Progress dots -->
+  <div class="hscroll-dots" id="hscroll-dots"></div>
 </section>
 
 <!-- MAP FEATURE -->
@@ -1695,8 +1797,61 @@
 
 function scrollTrack(dir) {
   const track = document.getElementById('htrack');
-  if(track) track.scrollBy({ left: dir * 320, behavior: 'smooth' });
+  if(track) track.scrollBy({ left: dir * 280, behavior: 'smooth' });
 }
+
+// Filter cards
+function filterCards(cat, btn) {
+  document.querySelectorAll('.hscroll-flt').forEach(b => b.classList.remove('fon'));
+  btn.classList.add('fon');
+  const cards = document.querySelectorAll('#htrack .frame-card[data-cat]');
+  let n = 0;
+  cards.forEach(c => {
+    const show = cat === 'svi' || c.dataset.cat === cat;
+    c.style.display = show ? '' : 'none';
+    if(show) n++;
+  });
+  const el = document.getElementById('hcount');
+  if(el) el.textContent = n;
+  const track = document.getElementById('htrack');
+  if(track) track.scrollLeft = 0;
+  buildDots();
+}
+
+// Progress dots
+function buildDots() {
+  const wrap = document.getElementById('hscroll-dots');
+  const track = document.getElementById('htrack');
+  if(!wrap || !track) return;
+  const visible = track.querySelectorAll('.frame-card:not([style*="display: none"]):not([style*="display:none"])');
+  wrap.innerHTML = '';
+  visible.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'hscroll-dot' + (i === 0 ? ' don' : '');
+    d.addEventListener('click', () => {
+      const cards = track.querySelectorAll('.frame-card:not([style*="display: none"]):not([style*="display:none"])');
+      if(cards[i]) cards[i].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'start' });
+    });
+    wrap.appendChild(d);
+  });
+}
+(function(){
+  buildDots();
+  const track = document.getElementById('htrack');
+  if(!track) return;
+  track.addEventListener('scroll', () => {
+    const wrap = document.getElementById('hscroll-dots');
+    if(!wrap) return;
+    const dots = wrap.querySelectorAll('.hscroll-dot');
+    const cards = track.querySelectorAll('.frame-card:not([style*="display: none"]):not([style*="display:none"])');
+    let closest = 0, minDist = Infinity;
+    cards.forEach((c, i) => {
+      const dist = Math.abs(c.getBoundingClientRect().left - track.getBoundingClientRect().left);
+      if(dist < minDist) { minDist = dist; closest = i; }
+    });
+    dots.forEach((d, i) => d.classList.toggle('don', i === closest));
+  });
+})();
 
 // ── 2. Nav: glass blur on scroll ───────────────
 (function(){
