@@ -513,6 +513,19 @@
     display:flex; align-items:center; justify-content:center;
     font-size:0.7rem; color:rgba(0,0,0,0.25); font-family:sans-serif;
   }
+  /* Draggable elements */
+  .hmk-drag .hmk-medal,
+  .hmk-drag .hmk-txt,
+  .hmk-drag .hmk-img { cursor:grab; user-select:none; touch-action:none; transition:box-shadow 0.15s; }
+  .hmk-drag .hmk-medal:hover,
+  .hmk-drag .hmk-txt:hover,
+  .hmk-drag .hmk-img:hover { box-shadow:0 0 0 1.5px rgba(201,168,76,0.6); }
+  .hmk-drag-hint {
+    position:absolute; bottom:7px; right:8px; z-index:10;
+    font-family:sans-serif; font-size:0.55rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:rgba(201,168,76,0.45);
+    pointer-events:none;
+  }
 
   /* Panel 3 — order mockup */
   .hmk-order {
@@ -998,10 +1011,16 @@
     .feature-card { padding:1.5rem; }
 
     /* Steps stepper */
-    .how-layout { grid-template-columns:1fr; gap:2rem; }
-    .how-preview { position:static; height:300px; }
+    .how-layout { grid-template-columns:1fr; gap:1.5rem; }
+    .how-steps { order:2; }
+    .how-preview { order:1; position:static; height:260px; }
     .hpanel { border-radius:4px; }
     .hstep-num { font-size:1.8rem; }
+    .hpanel-body { padding:12px; gap:10px; }
+    .hmk-sidebar { width:110px; }
+    .hmk-sidebar .hmk-chip { font-size:0.55rem; padding:2px 5px; }
+    .hmk-sl { font-size:0.5rem; }
+    .hmk-frame { width:80px; height:106px; border-width:6px; }
 
     /* Scroll frames */
     .hscroll-filters { padding:0 1.25rem; }
@@ -1280,20 +1299,22 @@
         </div>
       </div>
 
-      <!-- Panel 2: canvas with medal + elements -->
+      <!-- Panel 2: canvas with draggable elements -->
       <div class="hpanel" data-panel="1">
         <div class="hpanel-bar">
           <span class="hpanel-dot"></span><span class="hpanel-dot"></span><span class="hpanel-dot"></span>
           <span class="hpanel-ttl sans">Builder — Dizajn</span>
+          <span style="margin-left:auto;font-family:sans-serif;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(201,168,76,0.5);">↕ Prevuci elemente</span>
         </div>
         <div class="hpanel-body" style="padding:10px;">
           <div style="border:8px solid #111; border-radius:2px; flex:1; height:100%; box-shadow:0 6px 24px rgba(0,0,0,0.5); position:relative; overflow:hidden;">
-            <div class="hmk-canvas">
+            <div class="hmk-canvas hmk-drag" id="hmk-drag-canvas">
               <div class="hmk-img" style="left:8%;top:6%;width:38%;height:34%;">📸 foto</div>
               <div class="hmk-medal" style="left:50%;top:22%;transform:translateX(-50%);width:72px;height:72px;"></div>
               <div class="hmk-txt" style="left:50%;top:68%;transform:translateX(-50%);font-size:11px;font-weight:600;color:#111;">Marko Petrović</div>
               <div class="hmk-txt" style="left:50%;top:76%;transform:translateX(-50%);font-size:15px;color:#c9a84c;font-weight:300;">3:42:15</div>
               <div class="hmk-txt" style="left:50%;top:84%;transform:translateX(-50%);font-size:7.5px;color:#888;letter-spacing:.06em;">BELGRADE MARATHON 2025</div>
+              <span class="hmk-drag-hint sans">prevuci ↕</span>
             </div>
           </div>
         </div>
@@ -2098,6 +2119,8 @@ function buildDots() {
     panels[idx].classList.add('hactive');
     current = idx;
 
+    if (idx === 1) setTimeout(initPreviewDrag, 420);
+
     clearTimeout(timer);
     timer = setTimeout(() => activate((current + 1) % steps.length), DURATION);
   }
@@ -2105,6 +2128,68 @@ function buildDots() {
   steps.forEach((s, i) => s.addEventListener('click', () => activate(i)));
   activate(0);
 })();
+
+// DRAGGABLE PREVIEW ELEMENTS (panel 2)
+function initPreviewDrag() {
+  const canvas = document.getElementById('hmk-drag-canvas');
+  if (!canvas || canvas._dragInited) return;
+  canvas._dragInited = true;
+
+  const items = canvas.querySelectorAll('.hmk-medal, .hmk-txt, .hmk-img');
+  const cr = canvas.getBoundingClientRect();
+  if (cr.width === 0) return; // not visible yet, retry
+
+  items.forEach(el => {
+    const er = el.getBoundingClientRect();
+    el.style.left   = (er.left - cr.left) + 'px';
+    el.style.top    = (er.top  - cr.top)  + 'px';
+    el.style.transform = 'none';
+  });
+
+  let active = null, ox = 0, oy = 0;
+
+  const onStart = (cx, cy, target) => {
+    const el = target.closest('.hmk-medal, .hmk-txt, .hmk-img');
+    if (!el || !canvas.contains(el)) return;
+    active = el;
+    active.style.cursor = 'grabbing';
+    active.style.zIndex = '20';
+    const cr = canvas.getBoundingClientRect();
+    ox = cx - cr.left - parseFloat(active.style.left || 0);
+    oy = cy - cr.top  - parseFloat(active.style.top  || 0);
+  };
+
+  const onMove = (cx, cy) => {
+    if (!active) return;
+    const cr = canvas.getBoundingClientRect();
+    let x = cx - cr.left - ox;
+    let y = cy - cr.top  - oy;
+    x = Math.max(0, Math.min(cr.width  - active.offsetWidth,  x));
+    y = Math.max(0, Math.min(cr.height - active.offsetHeight, y));
+    active.style.left = x + 'px';
+    active.style.top  = y + 'px';
+  };
+
+  const onEnd = () => {
+    if (active) { active.style.cursor = 'grab'; active.style.zIndex = ''; active = null; }
+  };
+
+  canvas.addEventListener('mousedown', e => { onStart(e.clientX, e.clientY, e.target); e.preventDefault(); });
+  document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+  document.addEventListener('mouseup', onEnd);
+
+  canvas.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    onStart(e.touches[0].clientX, e.touches[0].clientY, e.target);
+    e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchmove', e => {
+    if (!active) return;
+    onMove(e.touches[0].clientX, e.touches[0].clientY);
+    e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchend', onEnd);
+}
 </script>
 
 <!-- FOOTER -->
